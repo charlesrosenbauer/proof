@@ -1,0 +1,12 @@
+/*
+  correlation
+  locality
+  curvature
+  volume
+  flow
+  distance
+  symmetry
+  containment
+  angle
+  operation induction
+*/
