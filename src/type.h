@@ -18,6 +18,13 @@ typedef struct{
 	int			size, fill;
 }SymbolTable;
 
+/*
+	TODO:
+	* allocator table
+	* proof table
+	* definition table
+*/
+
 
 
 
