@@ -1,0 +1,47 @@
+Proof
+* definitions
+	* types
+	* higher order types
+	* axioms
+	* sets
+	* integers / natural numbers
+	* value definitions
+* proofs
+	* goals
+	* assumptions
+	* contradiction detection
+	* branches / splits
+	* set operations
+		* union
+		* intersection
+		* null
+		* complement
+	* arithmetic
+		* add
+		* sub
+		* mul
+		* div
+		* mod
+		* ls
+		* eq
+		* neg
+		* abs
+		* exp
+		* root
+		* log
+	* algebraic equivalence
+	* equivalence / isomorphism
+* visualizations
+	* plane geometry
+		* point
+		* line
+		* arc
+		* circle
+		* angle
+		* measure
+		* labels
+	* venn diagrams
+	* graphs
+	* more
+* goal-oriented search
+	
