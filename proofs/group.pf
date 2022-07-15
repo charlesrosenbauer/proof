@@ -1,0 +1,32 @@
+
+;; GROUP
+; identity
+; associativity
+; inverse
+(Def Group
+	(Struct
+		(Set G)
+		(*  (-> G (-> G G)))
+	)
+	(Axioms
+		; identity
+		(exists e G
+			(forall g G
+				(= g (* e g))))
+		; associativity
+		(forall (a b c) G
+			(= (* a (* b c)) (* (* a b) c)))
+		; inverse
+		(forall a G
+			(exists z G
+				(= a (* a (* a z)))))
+	))
+
+
+;; ABELIAN GROUP
+(Def AbelGroup
+	(Group G)
+	(Axioms
+		; commutativity
+		(forall (a b) G (= (* b a) (* a b)))
+	))
