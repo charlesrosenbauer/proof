@@ -2,6 +2,8 @@
 #include "stdlib.h"
 #include "stdint.h"
 
+#include "frontend.h"
+
 int loadFile(char* fname, char** buffer, int64_t* fsize){
 	FILE*  pFile = fopen (fname,"r");
 	size_t result;
@@ -36,5 +38,10 @@ int main(int ac, char** as){
 	
 	for(int i = 0; i < ac-1; i++){
 		printf("%s [%li] :\n%s\n", as[i+1], ss[i], fs[i]);
+		if(parse(fs[i], ss[i]) < 0){
+			printf("Parens match\n");
+		}else{
+			printf("Unmatch\n");
+		}
 	}
 }

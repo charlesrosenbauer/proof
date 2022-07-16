@@ -10,7 +10,7 @@
 	* lexer
 	* parser
 */
-
+int parse(char*, int);
 
 
 
