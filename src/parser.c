@@ -3,6 +3,19 @@
 
 #include "stdint.h"
 #include "stdlib.h"
+#include "stdio.h"
+
+
+uint64_t hashText(char* text, int len){
+	uint64_t ret = 85917378991987918 - len;
+	for(int i = 0; i < len; i++){
+		int rot = text[i] % 64;
+		ret    ^= (text[i] * 13745795198) - 998573153;
+		ret     = (ret >> rot) | (ret << (64-rot));
+	}
+	if(ret == 0) return len;
+	return ret;
+}
 
 
 /*
@@ -16,23 +29,35 @@
 int parse(char* text, int len){
 	int  tkct = 0;
 	int* tks  = alloca(sizeof(int ) * len);
+	int  word = -1;
 	int depth = 0;
 	for(int i = 0; i < len; i++){
-		if      ((text[i] == '(')
-		||       (text[i] == '[')
-		||       (text[i] == '{')){
+		int wordmode = 0;
+		if      ( (text[i] == '(')
+		||        (text[i] == '[')
+		||        (text[i] == '{')){
 			tks[depth] = text[i];
 			depth++;
-		}else if((text[i] == ')')
-		||       (text[i] == ']')
-		||       (text[i] == '}')){
+		}else if( (text[i] == ')')
+		||        (text[i] == ']')
+		||        (text[i] == '}')){
 			depth--;
 			if(depth < 0) return i;
 			if((text[i] == ')') && (tks[depth] != '(')) return i;
 			if((text[i] == ']') && (tks[depth] != '[')) return i;
 			if((text[i] == '}') && (tks[depth] != '{')) return i;
-		}else if (text[i] == ';'){
+		}else if  (text[i] == ';'){
 			while((text[i] != '\n') && (i < len)) i++;
+		}else if(((text[i] >= 'a') && (text[i] <= 'z')) ||
+				 ((text[i] >= 'A') && (text[i] <= 'Z')) ||
+				 ((text[i] >= '0') && (text[i] <= '9'))){
+			if(word == -1) word = i;
+			wordmode = 1;
+		}
+		
+		if((word != -1) && !wordmode){
+			printf("WORD [%i %i: %08lx]\n", word, i, hashText(&text[word], i-word));
+			word = -1;
 		}
 	}
 	if(depth != 0) return len;
