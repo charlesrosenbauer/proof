@@ -6,6 +6,13 @@
 #include "stdio.h"
 
 
+int wordChar(char c){
+	return ((c >= 'a') && (c <= 'z'))
+		|| ((c >= 'A') && (c <= 'Z'))
+		|| ((c >= '0') && (c <= '9'));
+}
+
+
 uint64_t hashText(char* text, int len){
 	uint64_t ret = 85917378991987918 - len;
 	for(int i = 0; i < len; i++){
@@ -16,6 +23,19 @@ uint64_t hashText(char* text, int len){
 	if(ret == 0) return len;
 	return ret;
 }
+
+int wordEq(char* text, int a, int b){
+	int i = 0;
+	while(1){
+		if(text[a+i] != text[b+i]){
+			if(wordChar(text[a+i])) return 0;
+			if(wordChar(text[b+i])) return 0;
+			return 1;
+		}
+		i++;
+	}
+}
+
 
 
 /*
@@ -48,9 +68,7 @@ int parse(char* text, int len){
 			if((text[i] == '}') && (tks[depth] != '{')) return i;
 		}else if  (text[i] == ';'){
 			while((text[i] != '\n') && (i < len)) i++;
-		}else if(((text[i] >= 'a') && (text[i] <= 'z')) ||
-				 ((text[i] >= 'A') && (text[i] <= 'Z')) ||
-				 ((text[i] >= '0') && (text[i] <= '9'))){
+		}else if(wordChar(text[i])){
 			if(word == -1) word = i;
 			wordmode = 1;
 		}
