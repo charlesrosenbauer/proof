@@ -6,17 +6,22 @@
 
 
 typedef struct{
-	uint64_t hash;
-	uint64_t sym;
-	void *l, *r;
-}Icon;
+	int64_t		fileId;
+	int64_t		filePos;
+}Symbol;
+
+typedef struct{
+	uint64_t*	hashes;
+	Symbol*		syms;
+	int			size, fill;
+}SymbolTable;
 
 
 typedef struct{
-	uint64_t*	syms;
-	Icon*		icos;
-	int			size, fill;
-}SymbolTable;
+	uint64_t	symbol;
+	void *l, *r;
+}Term;
+
 
 /*
 	TODO:
