@@ -24,7 +24,16 @@ uint64_t hashText(char* text, int len){
 	return ret;
 }
 
+int wordLen(char* text, int pos){
+	int i = 0;
+	while(1){
+		if(!wordChar(text[pos+i])) return i;
+		i++;
+	}
+}
+
 int wordEq(char* text, int a, int b){
+	if(a == b) return 1;
 	int i = 0;
 	while(1){
 		if(text[a+i] != text[b+i]){
@@ -33,6 +42,46 @@ int wordEq(char* text, int a, int b){
 			return 1;
 		}
 		i++;
+	}
+}
+
+SymbolTable makeSymbolTable(int size){
+	SymbolTable ret;
+	ret.hashes = malloc(sizeof(uint64_t) * size);
+	for(int i  = 0; i < size; i++) ret.hashes[i] = 0;
+	ret.syms   = malloc(sizeof(Symbol  ) * size);
+	ret.size   = size;
+	ret.fill   = 0;
+	return ret;
+}
+
+void insertSymbol(SymbolTable* tab, uint64_t fileId, char* text, int pos, int len){
+	uint64_t h   = hashText(&text[pos], len);
+	int      ix  = h % tab->size;
+	for(int i = 0; i < tab->size; i++){
+		if(tab->hashes [ix] == 0){
+			tab->hashes[ix] = h;
+			tab->syms  [ix] = (Symbol){fileId, pos};
+			tab->fill++;
+			// if(tab->fill >= tab->size/4) growTable(tab);
+			return;
+		}else if(tab->hashes[ix] == h){
+			printf("!!\n");
+			if(wordEq(text, pos, tab->syms[ix].filePos)){ printf("=%08lx\n", h); return; }
+		}
+		ix = (ix+1 >= tab->size)? 0 : ix+1;
+	}
+}
+
+void printSymbolTable(SymbolTable* tab, char* text){
+	char buf[1024];
+	for(int i = 0; i < tab->size; i++){
+		if(tab->hashes[i]){
+			int len   = wordLen(text, tab->syms[i].filePos);
+			for(int j = 0; j < len; j++) buf[j] = text[tab->syms[i].filePos+j];
+			buf[len]  = 0;
+			printf("%04i %08lx %s\n", i, tab->hashes[i], buf);
+		}
 	}
 }
 
@@ -46,7 +95,7 @@ int wordEq(char* text, int a, int b){
 	* infix operators
 	* operators (+ - * / % \ < > = =< >= != ? : | & ! :A :E !A !E , . ~ _)
 */
-int parse(char* text, int len){
+int parse(SymbolTable* tab, uint64_t fileId, char* text, int len){
 	int  tkct = 0;
 	int* tks  = alloca(sizeof(int ) * len);
 	int  word = -1;
@@ -74,6 +123,7 @@ int parse(char* text, int len){
 		}
 		
 		if((word != -1) && !wordmode){
+			insertSymbol(tab, fileId, text, word, i-word);
 			printf("WORD [%i %i: %08lx]\n", word, i, hashText(&text[word], i-word));
 			word = -1;
 		}

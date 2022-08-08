@@ -19,7 +19,7 @@ typedef struct{
 
 typedef struct{
 	uint64_t	symbol;
-	void *l, *r;
+	void 		*l, *r;
 }Term;
 
 
