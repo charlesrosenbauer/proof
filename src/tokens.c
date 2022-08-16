@@ -90,7 +90,54 @@ int lexer(TokenList* tkl){
 			} break;
 			
 			case ',' : {tkl->tks[tkl->fill] = (Token){TK_COMMA  , i, 0}; } break;
+			case '?' : {tkl->tks[tkl->fill] = (Token){TK_QMARK  , i, 0}; } break;
 			
+			default  : {
+				int mode = 0;
+				if      ((txt[i] >= 'a') && (txt[i] <= 'z')){
+					tkl->tks[tkl->fill] = (Token){TK_ID     , i, 0};
+				}else if((txt[i] >= 'A') && (txt[i] <= 'Z')){
+					tkl->tks[tkl->fill] = (Token){TK_TYID   , i, 0};
+				}else if((txt[i] >= '0') && (txt[i] <= '9')){
+					tkl->tks[tkl->fill] = (Token){TK_NUM    , i, 0};
+					mode = 1;
+				}else{
+					mode = 2;
+				}
+				
+				if(mode == 1){
+					int dec = 0;
+					for(int j = 0; j < tkl->textlen; j++){
+						if((txt[j] >= '0') && (txt[j] <= '9')){
+							// keep going
+						}else if(txt[j] == '.'){
+							dec++;
+							if(dec > 1){
+								i = j;
+								j = tkl->textlen;
+							}
+						}else{
+							i = j;
+							j = tkl->textlen;
+						}
+					}
+				}else if(!mode){
+					for(int j = 0; j < tkl->textlen; j++){
+						if(((txt[j] >= '0') && (txt[j] <= '9'))
+						|| ((txt[j] >= 'a') && (txt[j] <= 'z'))
+						|| ((txt[j] >= 'A') && (txt[j] <= 'Z'))
+						|| ( txt[j] == '_')){
+							// keep going
+						}else{
+							i = j;
+							j = tkl->textlen;
+						}
+					}
+				}else{
+					// Bad token
+					if(txt[i] > ' ') return 0;
+				}
+			}break;
 			
 		}
 	}

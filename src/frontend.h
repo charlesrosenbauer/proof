@@ -45,7 +45,8 @@ typedef enum{
 	TK_NEQ		=	0x19,	//	!=
 	TK_NCP		=	0x1a,	//	<!>
 	
-	TK_COMMA	=	0x1b
+	TK_COMMA	=	0x1b,	//	,
+	TK_QMARK	=	0x1c	//	?
 }TokenType;
 
 typedef struct{
