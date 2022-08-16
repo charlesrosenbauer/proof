@@ -23,6 +23,16 @@ int lexer(TokenList* tkl){
 			case ']' : {tkl->tks[tkl->fill] = (Token){TK_END_BRK, i, 0}; } break;
 			case '}' : {tkl->tks[tkl->fill] = (Token){TK_END_BRC, i, 0}; } break;
 			
+			case '+' : {tkl->tks[tkl->fill] = (Token){TK_ADD    , i, 0}; } break;
+			case '-' : {tkl->tks[tkl->fill] = (Token){TK_SUB    , i, 0}; } break;
+			case '*' : {tkl->tks[tkl->fill] = (Token){TK_MUL    , i, 0}; } break;
+			case '/' : {tkl->tks[tkl->fill] = (Token){TK_DIV    , i, 0}; } break;
+			case '%' : {tkl->tks[tkl->fill] = (Token){TK_MOD    , i, 0}; } break;
+			
+			case '&' : {tkl->tks[tkl->fill] = (Token){TK_AND    , i, 0}; } break;
+			case '|' : {tkl->tks[tkl->fill] = (Token){TK_OR     , i, 0}; } break;
+			case '!' : {tkl->tks[tkl->fill] = (Token){TK_NOT    , i, 0}; } break;
+			case '^' : {tkl->tks[tkl->fill] = (Token){TK_XOR    , i, 0}; } break;
 			
 		
 		}
