@@ -51,6 +51,12 @@ typedef struct{
 	uint32_t	pos, file;
 }Token;
 
+typedef struct{
+	char*		text;
+	Token*		tks;
+	int			textlen, fill, cap;
+}TokenList;
+
 
 
 SymbolTable makeSymbolTable	(int);
