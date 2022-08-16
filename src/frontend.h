@@ -21,9 +21,9 @@ typedef enum{
 	TK_END_BRC	=	0x05,
 	
 	TK_ID		=	0x06,
-	TK_NUM		=	0x07,
-	TK_LCOM		=	0x08,
-	TK_MCOM		=	0x09,
+	TK_TYID		=	0x07,
+	TK_NUM		=	0x08,
+	TK_COM		=	0x09,
 	
 	TK_ADD		=	0x0a,	//	+
 	TK_SUB		=	0x0b,	//	-
@@ -43,7 +43,9 @@ typedef enum{
 	TK_GTE		=	0x17,	//	>=
 	TK_EQ		=	0x18,	//	=
 	TK_NEQ		=	0x19,	//	!=
-	TK_NCP		=	0x1a	//	<!>
+	TK_NCP		=	0x1a,	//	<!>
+	
+	TK_COMMA	=	0x1b
 }TokenType;
 
 typedef struct{
