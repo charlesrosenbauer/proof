@@ -60,6 +60,29 @@ typedef struct{
 	int			textlen, fill, cap;
 }TokenList;
 
+typedef enum{
+	LK_NIL = 0,
+	LK_NUM = 1,
+	LK_BRC = 2,
+	LK_BRK = 3,
+	LK_PAR = 4,
+	LK_TYP = 5,
+	LK_ID  = 6,
+	LK_OP  = 7
+}LispKind;
+
+typedef struct{
+	uint64_t val;
+	LispKind kind;
+	uint32_t next;
+	uint32_t tpos;
+}Lisp;
+
+typedef struct{
+	Lisp*	nodes;
+	int		size, fill;
+}LispTable;
+
 
 
 SymbolTable makeSymbolTable	(int);
