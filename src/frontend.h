@@ -61,32 +61,36 @@ typedef struct{
 }TokenList;
 
 typedef enum{
-	LK_NIL = 0,
-	LK_NUM = 1,
-	LK_BRC = 2,
-	LK_BRK = 3,
-	LK_PAR = 4,
-	LK_TYP = 5,
-	LK_ID  = 6,
-	LK_OP  = 7
-}LispKind;
+	NK_NIL = 0,
+	NK_NUM = 1,
+	NK_BRC = 2,
+	NK_BRK = 3,
+	NK_PAR = 4,
+	NK_TYP = 5,
+	NK_ID  = 6,
+	NK_OP  = 7
+}NodeKind;
 
 typedef struct{
 	uint64_t val;
-	LispKind kind;
+	NodeKind kind;
 	uint32_t next;
 	uint32_t tpos;
-}Lisp;
+}Node;
 
 typedef struct{
-	Lisp*	nodes;
+	Node*	nodes;
 	int		size, fill;
-}LispTable;
+}NodeTable;
 
 
 
 SymbolTable makeSymbolTable	(int);
 void		printSymbolTable(SymbolTable*, char*);
+
+NodeTable	makeNodeTable	(int);
+int			makeNode		(NodeTable*);
+void		printNodeTable	(NodeTable*);
 
 int			parse			(SymbolTable*, uint64_t, char*, int);
 

@@ -86,6 +86,50 @@ void printSymbolTable(SymbolTable* tab, char* text){
 }
 
 
+NodeTable makeLispTable(int size){
+	NodeTable ret;
+	size      = (size < 64)? 64 : size;
+	ret.nodes = malloc(sizeof(Node) * size);
+	ret.size  = size;
+	ret.fill  = 1;
+	return ret;
+}
+
+int	makeNode(NodeTable* tab){
+	if(tab->fill + 5 < tab->size){
+		Node*  tmp = tab->nodes;
+		tab->nodes = malloc(sizeof(Node) * tab->size * 2);
+		for(int  i = 0; i < tab->fill; i++) tab->nodes[i] = tmp[i];
+		free(tmp);
+		tab->size *= 2;
+	}
+	tab->fill++;
+	return tab->fill-1;
+}
+
+void printNodeTable(NodeTable* tab){
+	printf("====%i/%i====\n", tab->fill-1, tab->size);
+	for(int i = 0; i < tab->fill; i++){
+		char* sym = 0;
+		Node n = tab->nodes[i];
+		switch(n.kind){
+			case NK_NIL  : sym = "NIL "; break;
+			case NK_NUM  : sym = "NUM "; break;
+			case NK_BRC  : sym = "BRC "; break;
+			case NK_BRK  : sym = "BRK "; break;
+			case NK_PAR  : sym = "PAR "; break;
+			case NK_TYP  : sym = "TYP "; break;
+			case NK_ID   : sym = "ID  "; break;
+			case NK_OP   : sym = "OPR "; break;
+			default      : sym = "??? "; break;
+		}
+		printf("  %03x | %s %016lx -> %08x   (@%04x)\n", i, sym, n.val, n.next, n.tpos);
+	}
+}
+
+
+
+
 
 /*
 	For now, the language will just be a Lisp. A nicer syntax may come later.
