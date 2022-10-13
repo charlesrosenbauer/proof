@@ -13,40 +13,42 @@
 	* parser
 */
 typedef enum{
-	TK_OPN_PAR	=	0x00,
-	TK_OPN_BRK	=	0x01,
-	TK_OPN_BRC	=	0x02,
-	TK_END_PAR	=	0x03,
-	TK_END_BRK	=	0x04,
-	TK_END_BRC	=	0x05,
+	TK_NIL      =   0x00,
+
+	TK_OPN_PAR	=	0x01,
+	TK_OPN_BRK	=	0x02,
+	TK_OPN_BRC	=	0x03,
+	TK_END_PAR	=	0x04,
+	TK_END_BRK	=	0x05,
+	TK_END_BRC	=	0x06,
 	
-	TK_ID		=	0x06,
-	TK_TYID		=	0x07,
-	TK_NUM		=	0x08,
-	TK_COM		=	0x09,
+	TK_ID		=	0x07,
+	TK_TYID		=	0x08,
+	TK_NUM		=	0x09,
+	TK_COM		=	0x0a,
 	
-	TK_ADD		=	0x0a,	//	+
-	TK_SUB		=	0x0b,	//	-
-	TK_MUL		=	0x0c,	//	*
-	TK_DIV		=	0x0d,	//	/
-	TK_MOD		=	0x0e,	//	%
-	TK_EXP		=	0x0f,	//	**
+	TK_ADD		=	0x0b,	//	+
+	TK_SUB		=	0x0c,	//	-
+	TK_MUL		=	0x0d,	//	*
+	TK_DIV		=	0x0e,	//	/
+	TK_MOD		=	0x0f,	//	%
+	TK_EXP		=	0x10,	//	**
 	
-	TK_AND		=	0x10,	//	&
-	TK_OR		=	0x11,	//	|
-	TK_NOT		=	0x12,	//	!
-	TK_XOR		=	0x13,	//	^
+	TK_AND		=	0x11,	//	&
+	TK_OR		=	0x12,	//	|
+	TK_NOT		=	0x13,	//	!
+	TK_XOR		=	0x14,	//	^
 	
-	TK_LS		=	0x14,	//	<
-	TK_LSE		=	0x15,	//	=<
-	TK_GT		=	0x16,	//	>
-	TK_GTE		=	0x17,	//	>=
-	TK_EQ		=	0x18,	//	=
-	TK_NEQ		=	0x19,	//	!=
-	TK_NCP		=	0x1a,	//	<!>
+	TK_LS		=	0x15,	//	<
+	TK_LSE		=	0x16,	//	=<
+	TK_GT		=	0x17,	//	>
+	TK_GTE		=	0x18,	//	>=
+	TK_EQ		=	0x19,	//	=
+	TK_NEQ		=	0x1a,	//	!=
+	TK_NCP		=	0x1b,	//	<!>
 	
-	TK_COMMA	=	0x1b,	//	,
-	TK_QMARK	=	0x1c	//	?
+	TK_COMMA	=	0x1c,	//	,
+	TK_QMARK	=	0x1d	//	?
 }TokenType;
 
 typedef struct{
@@ -92,7 +94,7 @@ NodeTable	makeNodeTable	(int);
 int			makeNode		(NodeTable*);
 void		printNodeTable	(NodeTable*);
 
-int			lexer			(TokenList*);
+int			lexer			(TokenList*, int);
 void		printTokens		(Token*, int);
 
 int			parse			(SymbolTable*, uint64_t, char*, int);

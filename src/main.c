@@ -48,7 +48,7 @@ int main(int ac, char** as){
 		printf("%s [%li] :\n%s\n", as[i+1], ss[i], fs[i]);
 		
 		TokenList tkl = (TokenList){.text=fs[i], .textlen=ss[i]};
-		if(!lexer(&tkl)){
+		if(!lexer(&tkl, i)){
 			printf("ERROR : lexer failed on file %s\n", as[i-1]);
 			return -1;
 		}
