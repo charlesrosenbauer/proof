@@ -102,6 +102,7 @@ int lexer(TokenList* tkl, int fileId){
 					tkl->tks[tkl->fill] = (Token){TK_NUM    , i, fileId};
 					mode = 1;
 				}else{
+					tkl->fill--;
 					mode = 2;
 				}
 				
