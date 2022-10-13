@@ -107,7 +107,7 @@ int lexer(TokenList* tkl){
 				
 				if(mode == 1){
 					int dec = 0;
-					for(int j = 0; j < tkl->textlen; j++){
+					for(int j = i; j < tkl->textlen; j++){
 						if((txt[j] >= '0') && (txt[j] <= '9')){
 							// keep going
 						}else if(txt[j] == '.'){
@@ -122,7 +122,7 @@ int lexer(TokenList* tkl){
 						}
 					}
 				}else if(!mode){
-					for(int j = 0; j < tkl->textlen; j++){
+					for(int j = i; j < tkl->textlen; j++){
 						if(((txt[j] >= '0') && (txt[j] <= '9'))
 						|| ((txt[j] >= 'a') && (txt[j] <= 'z'))
 						|| ((txt[j] >= 'A') && (txt[j] <= 'Z'))
@@ -140,6 +140,7 @@ int lexer(TokenList* tkl){
 			}break;
 			
 		}
+		tkl->fill++;
 	}
 	
 	return 1;
