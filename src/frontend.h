@@ -92,6 +92,9 @@ NodeTable	makeNodeTable	(int);
 int			makeNode		(NodeTable*);
 void		printNodeTable	(NodeTable*);
 
+int			lexer			(TokenList*);
+void		printTokens		(Token*, int);
+
 int			parse			(SymbolTable*, uint64_t, char*, int);
 
 

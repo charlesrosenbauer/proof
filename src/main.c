@@ -27,6 +27,12 @@ int loadFile(char* fname, char** buffer, int64_t* fsize){
 
 
 int main(int ac, char** as){
+	if(ac < 2){
+		// We should eventually have a REPL or something
+		printf("No files to load\n");
+		return -1;
+	}
+
 	char**   fs = alloca(sizeof(char*) * (ac-1));
 	int64_t* ss = alloca(sizeof(int  ) * (ac-1));
 	for(int i = 1; i < ac; i++){
@@ -40,11 +46,19 @@ int main(int ac, char** as){
 	
 	for(int i = 0; i < ac-1; i++){
 		printf("%s [%li] :\n%s\n", as[i+1], ss[i], fs[i]);
+		
+		TokenList tkl = (TokenList){.text=fs[i], .textlen=ss[i]};
+		if(!lexer(&tkl)){
+			printf("ERROR : lexer failed on file %s\n", as[i-1]);
+			return -1;
+		}
+		printTokens(tkl.tks, tkl.fill);
+		/*
 		if(parse(&tab, i, fs[i], ss[i]) < 0){
 			printf("Parens match\n");
 		}else{
 			printf("Unmatch\n");
-		}
+		}*/
 	}
 	
 	printSymbolTable(&tab, fs[0]);

@@ -144,3 +144,55 @@ int lexer(TokenList* tkl){
 	
 	return 1;
 }
+
+
+
+void printTokens(Token* tks, int ct){
+	for(int i = 0; i < ct; i++){
+		Token t = tks[i];
+		printf("  @%05i:%02i |", t.pos, t.file);
+		switch(t.type){
+			case TK_OPN_PAR : printf(" (    \n"); break;
+			case TK_OPN_BRK : printf(" [    \n"); break;
+			case TK_OPN_BRC : printf(" {    \n"); break;
+			
+			case TK_END_PAR : printf(" )    \n"); break;
+			case TK_END_BRK : printf(" ]    \n"); break;
+			case TK_END_BRC : printf(" }    \n"); break;
+		
+			case TK_ID		: printf(" ID   \n"); break;
+			case TK_TYID	: printf(" TYID \n"); break;
+			case TK_NUM		: printf(" NUM  \n"); break;
+			case TK_COM		: printf(" COM  \n"); break;
+			
+			case TK_ADD		: printf(" ADD  \n"); break;
+			case TK_SUB		: printf(" SUB  \n"); break;
+			case TK_MUL		: printf(" MUL  \n"); break;
+			case TK_DIV		: printf(" DIV  \n"); break;
+			case TK_MOD		: printf(" MOD  \n"); break;
+			case TK_EXP		: printf(" EXP  \n"); break;
+			
+			case TK_AND		: printf(" AND  \n"); break;
+			case TK_OR		: printf(" OR   \n"); break;
+			case TK_NOT		: printf(" NOT  \n"); break;
+			case TK_XOR		: printf(" XOR  \n"); break;
+			
+			case TK_LS		: printf(" LS   \n"); break;
+			case TK_LSE		: printf(" LSE  \n"); break;
+			case TK_GT		: printf(" GT   \n"); break;
+			case TK_GTE		: printf(" GTE  \n"); break;
+			case TK_EQ		: printf(" EQ   \n"); break;
+			case TK_NEQ		: printf(" NEQ  \n"); break;
+			case TK_NCP		: printf(" NCP  \n"); break;
+			
+			case TK_COMMA	: printf(" COMMA\n"); break;
+			case TK_QMARK	: printf(" QMARK\n"); break;
+		}
+	
+	}
+}
+
+
+
+
+
