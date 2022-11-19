@@ -134,6 +134,7 @@ void insertSymbol(SymbolTable* tab, uint64_t fileId, char* text, int pos, int le
 
 void printSymbolTable(SymbolTable* tab, char* text){
 	char buf[1024];
+	printf("====SYMS %i/%i====\n", tab->fill, tab->size);
 	for(int i = 0; i < tab->size; i++){
 		if(tab->hashes[i]){
 			int len   = wordLen(text, tab->syms[i].filePos);
@@ -145,7 +146,7 @@ void printSymbolTable(SymbolTable* tab, char* text){
 }
 
 
-NodeTable makeLispTable(int size){
+NodeTable makeNodeTable(int size){
 	NodeTable ret;
 	size      = (size < 64)? 64 : size;
 	ret.nodes = malloc(sizeof(Node) * size);
@@ -167,8 +168,8 @@ int	makeNode(NodeTable* tab){
 }
 
 void printNodeTable(NodeTable* tab){
-	printf("====%i/%i====\n", tab->fill-1, tab->size);
-	for(int i = 0; i < tab->fill; i++){
+	printf("====NODES : %i/%i====\n", tab->fill-1, tab->size);
+	for(int i = 1; i < tab->fill; i++){
 		char* sym = 0;
 		Node n = tab->nodes[i];
 		switch(n.kind){
@@ -198,56 +199,6 @@ void printNodeTable(NodeTable* tab){
 	* infix operators
 	* operators (+ - * / % \ < > = =< >= != ? : | & ! :A :E !A !E , . ~ _)
 */
-int parse(SymbolTable* tab, uint64_t fileId, char* text, int len){
-	int  tkct = 0;
-	int* tks  = alloca(sizeof(int ) * len);
-	int  word = -1;
-	int depth = 0;
-	for(int i = 0; i < len; i++){
-		int wordmode = 0;
-		if      ( (text[i] == '(')
-		||        (text[i] == '[')
-		||        (text[i] == '{')){
-			tks[depth] = text[i];
-			depth++;
-		}else if( (text[i] == ')')
-		||        (text[i] == ']')
-		||        (text[i] == '}')){
-			depth--;
-			if(depth < 0) return i;
-			if((text[i] == ')') && (tks[depth] != '(')) return i;
-			if((text[i] == ']') && (tks[depth] != '[')) return i;
-			if((text[i] == '}') && (tks[depth] != '{')) return i;
-		}else if  (text[i] == ';'){
-			while((text[i] != '\n') && (i < len)) i++;
-		}else if(wordChar(text[i])){
-			if(word == -1) word = i;
-			wordmode = 1;
-		}
-		
-		if((word != -1) && !wordmode){
-			insertSymbol(tab, fileId, text, word, i-word);
-			printf("WORD [%i %i: %08lx]\n", word, i, hashText(&text[word], i-word));
-			word = -1;
-		}
-	}
-	if(depth != 0) return len;
-	/*
-	depth     = 0;
-	for(int i = 0; i < len; i++){
-		if      ( text[i] == '('){
-			// open
-		}else if( text[i] == ')'){
-			// end
-		}else if((text[i] >= '0') && (text[i] <= '9')){
-			// integer or middle of symbol
-		}else if((text[i] >= 'a') && (text[i] <= 'z')){
-			// symbol
-		}else if((text[i] >= 'A') && (text[i] <= 'Z')){
-			// symbol
-		}else if( text[i] <= ' '){
-			// whitespace
-		}
-	}*/
-	return -1;
+int parse(SymbolTable* tab, TokenList* tkl, NodeTable* ntab, uint64_t fileId){
+	return 0;
 }

@@ -42,7 +42,7 @@ int main(int ac, char** as){
 		}
 	}
 	
-	SymbolTable tab = makeSymbolTable(2048);
+	SymbolTable stab = makeSymbolTable(2048);
 	
 	for(int i = 0; i < ac-1; i++){
 		printf("%s [%li] :\n%s\n", as[i+1], ss[i], fs[i]);
@@ -53,13 +53,10 @@ int main(int ac, char** as){
 			return -1;
 		}
 		printTokens(tkl.tks, tkl.fill);
-		/*
-		if(parse(&tab, i, fs[i], ss[i]) < 0){
-			printf("Parens match\n");
-		}else{
-			printf("Unmatch\n");
-		}*/
+		NodeTable ntab = makeNodeTable(tkl.fill * 2);
+		parse(&stab, &tkl, &ntab, i);
+		printNodeTable(&ntab);
 	}
 	
-	printSymbolTable(&tab, fs[0]);
+	printSymbolTable(&stab, fs[0]);
 }

@@ -97,7 +97,7 @@ void		printNodeTable	(NodeTable*);
 int			lexer			(TokenList*, int);
 void		printTokens		(Token*, int);
 
-int			parse			(SymbolTable*, uint64_t, char*, int);
+int			parse			(SymbolTable*, TokenList*, NodeTable*, uint64_t);
 
 
 
