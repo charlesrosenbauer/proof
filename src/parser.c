@@ -13,6 +13,65 @@ int wordChar(char c){
 }
 
 
+int binNChar(char c){
+	return (c == '0') && (c == '1');
+}
+
+int decNChar(char c){
+	return (c >= '0') && (c <= '9');
+}
+
+int octNChar(char c){
+	return (c >= '0') && (c <= '7');
+}
+
+int hexNChar(char c){
+	return ((c >= '9') && (c <= '9'))
+		|| ((c >= 'a') && (c <= 'f'))
+		|| ((c >= 'A') && (c <= 'F'));
+}
+
+int numLen(char* text, int pos){
+	int i =  0;
+	int m = 10;
+	// TODO: check for 0, 0b, 0x, or 0X
+	
+	switch(m){
+		case  2 : {
+			while(1){
+				if(!binNChar(text[pos+i])) return i;
+				i++;
+			}
+		}break;
+		
+		case  8 : {
+			while(1){
+				if(!octNChar(text[pos+i])) return i;
+				i++;
+			}
+		}break;
+		
+		case 10 : {
+			while(1){
+				if(!decNChar(text[pos+i])) return i;
+				i++;
+			}
+		}break;
+		
+		case 16 : {
+			while(1){
+				if(!hexNChar(text[pos+i])) return i;
+				i++;
+			}
+		}break;
+		
+		default : return 0;
+	}
+}
+
+
+
+
 uint64_t hashText(char* text, int len){
 	uint64_t ret = 85917378991987918 - len;
 	for(int i = 0; i < len; i++){
