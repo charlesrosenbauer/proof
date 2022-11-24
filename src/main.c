@@ -19,7 +19,14 @@ int main(int ac, char** av){
 	if(!loadpass) return -1;
 	
 	
+	TokenList* tkls = alloca(sizeof(TokenList) * ac);
+	for(int i = 1; i < ac; i++){
+		tkls[i].text	= files[i];
+		tkls[i].fileId	= i;
+		tkls[i].filesize= sizes[i];
+		
 	
+	}
 	
 	
 	

@@ -14,9 +14,10 @@ typedef enum{
 	TK_END_BRK,
 	TK_END_BRC,
 
+	TK_TYID,
 	TK_ID,
 	TK_NUM,
-	TK_STR,
+	TK_COM,
 	
 	TK_QMK,
 	TK_COLON,
@@ -54,10 +55,8 @@ typedef struct{
 
 typedef struct{
 	Token*		tks;
-	int			tkct, tkcap;
-	
 	Position*	poss;
-	int			posct, poscap;
+	int			tkct;
 	
 	char*		text;
 	uint32_t	fileId, filesize;
