@@ -67,4 +67,22 @@ int		lexer			(TokenList*);
 void	printTokenList	(TokenList*);
 
 
+typedef struct{
+	union{
+		uint64_t	num;
+		uint64_t	sym;
+		uint32_t	sub;
+	};
+	uint32_t	next;
+	TokenType	kind;
+}Node;
+
+typedef struct{
+	Node*	nodes;
+	int		fill;
+}NodeTable;
+
+int 	nodeParser		(TokenList*, NodeTable*);
+
+
 #endif
