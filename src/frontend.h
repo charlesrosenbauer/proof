@@ -68,6 +68,19 @@ void	printTokenList	(TokenList*);
 
 
 typedef struct{
+	int64_t		fileId;
+	int64_t		filePos;
+}Symbol;
+
+typedef struct{
+	uint64_t*	hashes;
+	Symbol*		syms;
+	int			size, fill;
+}SymbolTable;
+
+
+
+typedef struct{
 	union{
 		uint64_t	num;
 		uint64_t	sym;
