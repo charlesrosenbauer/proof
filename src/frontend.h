@@ -43,8 +43,25 @@ typedef enum{
 	TK_NCP
 }TokenType;
 
+typedef struct{
+	TokenType	kind;
+	uint32_t	pos;
+}Token;
 
+typedef struct{
+	uint32_t	line, column;
+}Position;
 
+typedef struct{
+	Token*		tks;
+	int			tkct, tkcap;
+	
+	Position*	poss;
+	int			posct, poscap;
+	
+	char*		text;
+	uint32_t	fileId, filesize;
+}TokenList;
 
 
 
