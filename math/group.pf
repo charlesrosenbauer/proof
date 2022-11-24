@@ -1,33 +1,49 @@
 
 ;; GROUP
-;; identity
-;; associativity
-;; inverse
-{Def Group
-	{Struct
-		(Set G)
-		(*  (-> G (-> G G)))
-	}
-	{Axioms
-		;; identity
-		[exists e G
-			[forall g G
-				[= g (* e g)]]]
-		;; associativity
-		[forall [a b c] G
-			[= (* a (* b c)) (* (* a b) c)]]
-		;; inverse
-		[forall a G
-			[exists z G
-				[= a (* a (* a z))]]]
-	}}
+{def Group
+	(Set G)
+	(*  (; (G G) G))
+	
+	(axiom id
+		[exists (G e)
+			[forall (G g) : (= g (* e g))]])
+	(axiom assoc
+		[forall (G a b c) : (= (* a (* b c)) (* (* a b) c))])
+	(axiom inv
+		[forall (G a)
+			[exists (G z) : (= a (* a (* a z)))]])
+}
+
 
 
 ;; ABELIAN GROUP
-{Def AbelGroup
-	{Group G}
-	{Axioms
-		;; commutativity
-		[forall [a b] G
-			[= (* b a) (* a b)]]
-	}}
+{def AbelGroup
+	(Group G)
+	(axiom commute
+		[forall (G a b) : (= (* a b) (* b a))])
+}
+
+
+
+;; PARTIALLY ORDERED SET
+{def Poset
+	(Set Ord)
+	(=< (; (Ord Ord) Bool))
+	
+	(axiom reflex
+		[forall (Ord a) : (=< a a)])
+	(axiom trans
+		[forall (Ord a b c) (=< a b) (=< b c) : (=< a c)])
+	(axiom antisym
+		[forall (Ord a b)   (=< a b) (=< b a) : (=  a b)])
+}
+
+
+
+;; TOTAL ORDER
+{def Order
+	(Poset P)
+	(axiom total
+		[forall (P a b) : (| (=< a b) (=< b a))])
+}
+		
