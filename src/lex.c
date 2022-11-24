@@ -206,11 +206,23 @@ int lexer(TokenList* tkl){
 
 
 
+int tokenLen(TokenList* tkl, int ix){
+	if(ix <          0) return 0;
+	if(ix >= tkl->tkct) return 0;
+	int init = tkl->tks[ix].pos;
+	int last = (ix+1 <= tkl->tkct)? tkl->tks[ix+1].pos : tkl->filesize;
+	for(int i = last-1; i >= init; i--)
+		if(tkl->text[i] > ' ') return (i-init)+1;
+	return 0;
+}
+
 
 
 void printTokenList(TokenList* tkl){
 	printf("====TOKS [F%02i] %04iTS====\n", tkl->fileId, tkl->tkct);
 	for(int i = 0; i < tkl->tkct; i++){
+		printf("%03i %02i | ", i, tokenLen(tkl, i));
+	
 		switch(tkl->tks[i].kind){
 			case TK_NIL     : printf("<NIL>  \n"); break;
 	
@@ -252,10 +264,6 @@ void printTokenList(TokenList* tkl){
 		}
 	}
 }
-
-
-
-
 
 
 
