@@ -63,8 +63,8 @@ typedef struct{
 }TokenList;
 
 
-int lexer(TokenList*);
-
+int		lexer			(TokenList*);
+void	printTokenList	(TokenList*);
 
 
 #endif

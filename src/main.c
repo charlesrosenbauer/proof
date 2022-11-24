@@ -27,6 +27,8 @@ int main(int ac, char** av){
 		
 		lexer(&tkls[i]);
 		printf("%i tokens\n", tkls[i].tkct);
+		
+		printTokenList(&tkls[i]);
 	}
 	
 	
