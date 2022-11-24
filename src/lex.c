@@ -154,14 +154,13 @@ int lexer(TokenList* tkl){
 						tkl->tks[tkix] = (Token){TK_TYID   , i};
 						tkix++;
 						for(int j = i+1; j < tkl->filesize; j++){
-							i++;
 							char n = tkl->text[j];
 							if(((n >= 'a') && (n <= 'z'))
 							|| ((n >= 'A') && (n <= 'Z'))
 							|| ((n >= '0') && (n <= '9'))
 							||  (n == '_') || (n == '@')){
-								i++;
 							}else{
+								i = j;
 								j = tkl->filesize;
 							}
 						}
@@ -170,14 +169,13 @@ int lexer(TokenList* tkl){
 						tkl->tks[tkix] = (Token){TK_ID     , i};
 						tkix++;
 						for(int j = i+1; j < tkl->filesize; j++){
-							i++;
 							char n = tkl->text[j];
 							if(((n >= 'a') && (n <= 'z'))
 							|| ((n >= 'A') && (n <= 'Z'))
 							|| ((n >= '0') && (n <= '9'))
 							||  (n == '_') || (n == '@')){
-								i++;
 							}else{
+								i = j;
 								j = tkl->filesize;
 							}
 						}
@@ -190,8 +188,8 @@ int lexer(TokenList* tkl){
 							char n = tkl->text[j];
 							if(((n >= '0') && (n <= '9'))
 							||  (n == '_')){
-								i++;
 							}else{
+								i = j;
 								j = tkl->filesize;
 							}
 						}
