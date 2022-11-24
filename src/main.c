@@ -25,7 +25,8 @@ int main(int ac, char** av){
 		tkls[i].fileId	= i;
 		tkls[i].filesize= sizes[i];
 		
-	
+		lexer(&tkls[i]);
+		printf("%i tokens\n", tkls[i].tkct);
 	}
 	
 	

@@ -20,7 +20,6 @@
 	TK_TYID,
 	TK_ID,
 	TK_NUM,
-	TK_STR,
 	TK_COM,
 	
 ?	TK_QMK,
@@ -146,12 +145,56 @@ int lexer(TokenList* tkl){
 			}break;
 			
 			default: {
-				// id
-				// tyid
-				// num
+				// ignore whitespace
+				if(x0 > ' '){
+					if((x0 >= 'A') && (x0 <= 'Z')){
+						// tyid
+						for(int j = i+1; j < tkl->filesize; j++){
+							i++;
+							char n = tkl->text[j];
+							if(((n >= 'a') && (n <= 'z'))
+							|| ((n >= 'A') && (n <= 'Z'))
+							|| ((n >= '0') && (n <= '9'))
+							||  (n == '_') || (n == '@')){
+							
+							}else{
+								j = tkl->filesize++;
+							}
+						}
+					}else if((x0 >= 'a') && (x0 <= 'z')){
+						// id
+						for(int j = i+1; j < tkl->filesize; j++){
+							i++;
+							char n = tkl->text[j];
+							if(((n >= 'a') && (n <= 'z'))
+							|| ((n >= 'A') && (n <= 'Z'))
+							|| ((n >= '0') && (n <= '9'))
+							||  (n == '_') || (n == '@')){
+							
+							}else{
+								j = tkl->filesize++;
+							}
+						}
+					}else if((x0 >= '0') && (x0 <= '9')){
+						// num
+						for(int j = i+1; j < tkl->filesize; j++){
+							i++;
+							char n = tkl->text[j];
+							if(((n >= '0') && (n <= '9'))
+							||  (n == '_')){
+							
+							}else{
+								j = tkl->filesize++;
+							}
+						}
+					}
+				}
 			}break;
 		}
 	}
+	
+	tkl->tkct = tkix+1;
+	
 	return 1;
 }
 

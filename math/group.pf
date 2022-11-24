@@ -1,22 +1,22 @@
 
 ;; GROUP
-; identity
-; associativity
-; inverse
+;; identity
+;; associativity
+;; inverse
 {Def Group
 	{Struct
 		(Set G)
 		(*  (-> G (-> G G)))
 	}
 	{Axioms
-		; identity
+		;; identity
 		[exists e G
 			[forall g G
 				[= g (* e g)]]]
-		; associativity
+		;; associativity
 		[forall [a b c] G
 			[= (* a (* b c)) (* (* a b) c)]]
-		; inverse
+		;; inverse
 		[forall a G
 			[exists z G
 				[= a (* a (* a z))]]]
@@ -27,7 +27,7 @@
 {Def AbelGroup
 	{Group G}
 	{Axioms
-		; commutativity
+		;; commutativity
 		[forall [a b] G
 			[= (* b a) (* a b)]]
 	}}

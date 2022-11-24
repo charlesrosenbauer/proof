@@ -63,5 +63,8 @@ typedef struct{
 }TokenList;
 
 
+int lexer(TokenList*);
+
+
 
 #endif
