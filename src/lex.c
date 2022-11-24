@@ -72,12 +72,14 @@ int lexer(TokenList* tkl){
 			case ';':{
 				if(x1 == ';'){
 					// ;; comment
-					for(int j = i; j < tkl->filesize; j++){
-						i++;
-						if(tkl->text[j] == '\n') j = tkl->filesize++;
-					}
-					tkl->tks[tkix] = (Token){TK_SEMI, i};
+					tkl->tks[tkix] = (Token){TK_COM , i};
 					tkix++;
+					for(int j = i; j < tkl->filesize; j++){
+						if(tkl->text[j] == '\n'){
+							i = j;
+							j = tkl->filesize;
+						}
+					}
 				}else{
 					tkl->tks[tkix] = (Token){TK_SEMI, i};
 					tkix++;
@@ -149,6 +151,8 @@ int lexer(TokenList* tkl){
 				if(x0 > ' '){
 					if((x0 >= 'A') && (x0 <= 'Z')){
 						// tyid
+						tkl->tks[tkix] = (Token){TK_TYID   , i};
+						tkix++;
 						for(int j = i+1; j < tkl->filesize; j++){
 							i++;
 							char n = tkl->text[j];
@@ -158,13 +162,13 @@ int lexer(TokenList* tkl){
 							||  (n == '_') || (n == '@')){
 								i++;
 							}else{
-								j = tkl->filesize++;
+								j = tkl->filesize;
 							}
-							tkl->tks[tkix] = (Token){TK_TYID   , i};
-							tkix++;
 						}
 					}else if((x0 >= 'a') && (x0 <= 'z')){
 						// id
+						tkl->tks[tkix] = (Token){TK_ID     , i};
+						tkix++;
 						for(int j = i+1; j < tkl->filesize; j++){
 							i++;
 							char n = tkl->text[j];
@@ -174,13 +178,13 @@ int lexer(TokenList* tkl){
 							||  (n == '_') || (n == '@')){
 								i++;
 							}else{
-								j = tkl->filesize++;
+								j = tkl->filesize;
 							}
-							tkl->tks[tkix] = (Token){TK_ID     , i};
-							tkix++;
 						}
 					}else if((x0 >= '0') && (x0 <= '9')){
 						// num
+						tkl->tks[tkix] = (Token){TK_NUM    , i};
+						tkix++;
 						for(int j = i+1; j < tkl->filesize; j++){
 							i++;
 							char n = tkl->text[j];
@@ -188,10 +192,8 @@ int lexer(TokenList* tkl){
 							||  (n == '_')){
 								i++;
 							}else{
-								j = tkl->filesize++;
+								j = tkl->filesize;
 							}
-							tkl->tks[tkix] = (Token){TK_NUM    , i};
-							tkix++;
 						}
 					}
 				}
