@@ -58,6 +58,47 @@ int nodeParser(TokenList* tkl, NodeTable* ntab){
 	
 	
 	// TODO : parsing
+	for(int i = 0; i < tkl->tkct; i++){
+		TkType k = tkl->tks[i].kind;
+		switch(k){
+			case TK_OPN_PAR : {
+			
+			}break;
+			case TK_OPN_BRK : {
+			
+			}break;
+			case TK_OPN_BRC : {
+			
+			}break;
+			
+			case TK_END_PAR : {
+			
+			}break;
+			case TK_END_BRK : {
+			
+			}break;
+			case TK_END_BRC : {
+			
+			}break;
+			
+			case TK_TYID	:
+			case TK_ID		: {
+				// Get symbol from symbol table
+			}break;
+			case TK_NUM		: {
+				// Parse number
+			}break;
+			case TK_COM		: {
+				// Probably just drop this
+				// Or maybe have a separate data structure for comments
+				// which we link to the next/previous node
+			}break;
+			
+			default: {
+				Node n = (Node){.kind=k, .next=0};
+			}break;
+		}
+	}
 	
 	
 	return 1;
