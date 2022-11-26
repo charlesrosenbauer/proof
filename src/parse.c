@@ -21,30 +21,30 @@ int nodeParser(TokenList* tkl, NodeTable* ntab){
 			case TK_END_PAR : {
 				stk--;
 				if(stk < 0){
-					printf("Unmatched parens\n");
+					printf("Unmatched parens %i\n", i);
 					return 0;
 				}else if(stack[stk] != TK_OPN_PAR){
-					printf("Missing open parens\n");
+					printf("Missing open parens %i\n", i);
 					return 0;
 				}
 			}break;
 			case TK_END_BRK : {
 				stk--;
 				if(stk < 0){
-					printf("Unmatched bracket\n");
+					printf("Unmatched bracket %i\n", i);
 					return 0;
-				}else if(stack[stk] != TK_OPN_PAR){
-					printf("Missing open bracket\n");
+				}else if(stack[stk] != TK_OPN_BRK){
+					printf("Missing open bracket %i\n", i);
 					return 0;
 				}
 			}break;
 			case TK_END_BRC : {
 				stk--;
 				if(stk < 0){
-					printf("Unmatched brace\n");
+					printf("Unmatched brace %i\n", i);
 					return 0;
-				}else if(stack[stk] != TK_OPN_PAR){
-					printf("Missing open brace\n");
+				}else if(stack[stk] != TK_OPN_BRC){
+					printf("Missing open brace %i\n", i);
 					return 0;
 				}
 			}break;

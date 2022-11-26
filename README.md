@@ -14,3 +14,4 @@ Some builtin notions:
 * Set, equality, union, intersect, complement, power set, etc.
 * natural number mapping
 * peano acceleration
+* definition/axiom equivalence checking, definition casting

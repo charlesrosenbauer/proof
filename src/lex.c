@@ -160,7 +160,7 @@ int lexer(TokenList* tkl){
 							|| ((n >= '0') && (n <= '9'))
 							||  (n == '_') || (n == '@')){
 							}else{
-								i = j;
+								i = j-1;
 								j = tkl->filesize;
 							}
 						}
@@ -175,7 +175,7 @@ int lexer(TokenList* tkl){
 							|| ((n >= '0') && (n <= '9'))
 							||  (n == '_') || (n == '@')){
 							}else{
-								i = j;
+								i = j-1;
 								j = tkl->filesize;
 							}
 						}
@@ -189,7 +189,7 @@ int lexer(TokenList* tkl){
 							if(((n >= '0') && (n <= '9'))
 							||  (n == '_')){
 							}else{
-								i = j;
+								i = j-1;
 								j = tkl->filesize;
 							}
 						}
