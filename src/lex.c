@@ -63,7 +63,7 @@ int lexer(TokenList* tkl){
 			case '[': {tkl->tks[tkix] = (Token){TK_OPN_BRK, i}; tkix++;}break;
 			case '{': {tkl->tks[tkix] = (Token){TK_OPN_BRC, i}; tkix++;}break;
 			
-			case ')': {tkl->tks[tkix] = (Token){TK_OPN_PAR, i}; tkix++;}break;
+			case ')': {tkl->tks[tkix] = (Token){TK_END_PAR, i}; tkix++;}break;
 			case ']': {tkl->tks[tkix] = (Token){TK_END_BRK, i}; tkix++;}break;
 			case '}': {tkl->tks[tkix] = (Token){TK_END_BRC, i}; tkix++;}break;
 			

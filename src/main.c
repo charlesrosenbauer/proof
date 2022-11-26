@@ -20,6 +20,8 @@ int main(int ac, char** av){
 	
 	
 	TokenList* tkls = alloca(sizeof(TokenList) * ac);
+	NodeTable* ntbs = alloca(sizeof(NodeTable) * ac);
+	
 	for(int i = 1; i < ac; i++){
 		tkls[i].text	= files[i];
 		tkls[i].fileId	= i;
@@ -29,6 +31,8 @@ int main(int ac, char** av){
 		printf("%i tokens\n", tkls[i].tkct);
 		
 		printTokenList(&tkls[i]);
+		
+		nodeParser(&tkls[i], &ntbs[i]);
 	}
 	
 	

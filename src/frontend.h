@@ -42,10 +42,10 @@ typedef enum{
 	TK_EQ,
 	TK_NEQ,
 	TK_NCP
-}TokenType;
+}TkType;
 
 typedef struct{
-	TokenType	kind;
+	TkType		kind;
 	uint32_t	pos;
 }Token;
 
@@ -87,7 +87,7 @@ typedef struct{
 		uint32_t	sub;
 	};
 	uint32_t	next;
-	TokenType	kind;
+	TkType		kind;
 }Node;
 
 typedef struct{
