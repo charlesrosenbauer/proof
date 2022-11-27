@@ -21,11 +21,24 @@ SymbolTable makeSymbolTable(int size){
 }
 
 
-int insertSymbol(SymbolTable* stab, char* text, int len, Symbol sym){
+int insertSymbol(SymbolTable* stab, char* text, int pos, int len, int size, Symbol sym){
 	uint64_t hash = hashStrSize(text, len);
 	int ix = hash & stab->size-1;
 	for(int i = 0; i < stab->size; i++){
 		int ix = (hash + i) & (stab->size - 1);
+		if(stab->hashes[i] == hash){
+			if(pos == stab->syms[i].filePos) return ix;
+			int pass = 1;
+			if(pos+len < size){
+				for(int j = 0; j < len; j++){
+					if(text[j+pos] != text[j+stab->syms[i].filePos]){
+						pass = 0;
+						j = len;
+					}
+				}
+				if(pass) return ix;
+			}
+		}
 		if(!stab->hashes[i]){
 			stab->hashes[i] = hash;
 			stab->syms  [i] = sym;

@@ -19,8 +19,9 @@ int main(int ac, char** av){
 	if(!loadpass) return -1;
 	
 	
-	TokenList* tkls = alloca(sizeof(TokenList) * ac);
-	NodeTable* ntbs = alloca(sizeof(NodeTable) * ac);
+	TokenList*  tkls = alloca(sizeof(TokenList) * ac);
+	NodeTable*  ntbs = alloca(sizeof(NodeTable) * ac);
+	SymbolTable syms = makeSymbolTable(65536);
 	
 	for(int i = 1; i < ac; i++){
 		tkls[i].text	= files[i];
@@ -32,7 +33,7 @@ int main(int ac, char** av){
 		
 		printTokenList(&tkls[i]);
 		
-		nodeParser(&tkls[i], &ntbs[i]);
+		nodeParser(&tkls[i], &ntbs[i], &syms);
 	}
 	
 	

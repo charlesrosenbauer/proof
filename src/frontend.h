@@ -64,6 +64,7 @@ typedef struct{
 
 
 int		lexer			(TokenList*);
+int		tokenLen		(TokenList*, int);
 void	printTokenList	(TokenList*);
 
 
@@ -77,6 +78,10 @@ typedef struct{
 	Symbol*		syms;
 	int			size, fill;
 }SymbolTable;
+
+SymbolTable 	makeSymbolTable	(int);
+int				insertSymbol	(SymbolTable*, char*, int, int, int, Symbol);
+int 			lookupSymbol	(SymbolTable*, char*, int, int, int);
 
 
 
@@ -95,7 +100,7 @@ typedef struct{
 	int		fill;
 }NodeTable;
 
-int 	nodeParser		(TokenList*, NodeTable*);
+int 	nodeParser		(TokenList*, NodeTable*, SymbolTable*);
 
 
 #endif

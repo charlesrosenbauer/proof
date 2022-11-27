@@ -6,7 +6,7 @@
 #include "frontend.h"
 
 
-int nodeParser(TokenList* tkl, NodeTable* ntab){
+int nodeParser(TokenList* tkl, NodeTable* ntab, SymbolTable* stab){
 	ntab->nodes = malloc(sizeof(Node) * tkl->tkct);
 	ntab->fill  = 0;
 	
@@ -84,6 +84,9 @@ int nodeParser(TokenList* tkl, NodeTable* ntab){
 			case TK_TYID	:
 			case TK_ID		: {
 				// Get symbol from symbol table
+				int pos = tkl->tks[i].pos;
+				int len = tokenLen(tkl, i);
+				int sym = insertSymbol(stab, tkl->text, pos, len, tkl->filesize, (Symbol){.fileId=tkl->fileId, .filePos=pos});
 			}break;
 			case TK_NUM		: {
 				// Parse number
