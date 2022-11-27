@@ -53,7 +53,7 @@ int lexer(TokenList* tkl){
 	tkl->poss	= malloc(sizeof(Position) * tkl->filesize);
 	tkl->tkct	= 0;
 	
-	int l=1, c=1, tkix=0;
+	int ln=1, cl=1, tkix=0;
 	for(int i = 0; i < tkl->filesize; i++){
 		char x0 = tkl->text[i];
 		char x1 = (i+1 < tkl->filesize)? tkl->text[i+1] : 0;
@@ -78,6 +78,8 @@ int lexer(TokenList* tkl){
 						if(tkl->text[j] == '\n'){
 							i = j;
 							j = tkl->filesize;
+							ln++;
+							cl=1;
 						}
 					}
 				}else{
@@ -193,9 +195,18 @@ int lexer(TokenList* tkl){
 								j = tkl->filesize;
 							}
 						}
+					}else{
+						printf("Unexpected symbol (%c) @%i:%i\n", tkl->text[i], ln, cl);
+						return 0;
 					}
 				}
 			}break;
+		}
+		if(x0 == '\n'){
+			ln++;
+			cl=1;
+		}else{
+			cl += (x0 == '\t')? 4 : 1;
 		}
 	}
 	
