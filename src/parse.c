@@ -101,8 +101,9 @@ int subParser(TokenList* tkl, NodeTable* ntab, SymbolTable* stab, int start, int
 		}
 	}
 	
-	printf("ERROR : Ran out of contents\n");
-	return -1;
+	//printf("ERROR : Ran out of contents\n");
+	//return -1;
+	return 0;
 }
 
 
@@ -162,3 +163,41 @@ int nodeParser(TokenList* tkl, NodeTable* ntab, SymbolTable* stab){
 	
 	return 1;
 }
+
+
+
+
+
+void printNodeTable(NodeTable* ntab){
+	printf("====NTAB [%i]====\n", ntab->fill);
+	for(int i = 0; i < ntab->fill; i++){
+		Node n = ntab->nodes[i];
+		switch(n.kind){
+			case NK_NDF		: printf("%03x | ???  %03x %016lx\n", i, n.next, n.sym); break;
+	
+			case NK_PNIL	: printf("%03x | ()   %03x\n", i, n.next); break;
+			case NK_CNIL	: printf("%03x | []   %03x\n", i, n.next); break;
+			case NK_KNIL	: printf("%03x | {}   %03x\n", i, n.next); break;
+	
+			case NK_PAR		: printf("%03x | (    %03x %03x\n", i, n.sub, n.next); break;
+			case NK_BRK		: printf("%03x | [    %03x %03x\n", i, n.sub, n.next); break;
+			case NK_BRC		: printf("%03x | {    %03x %03x\n", i, n.sub, n.next); break;
+	
+			case NK_ID		: printf("%03x | ID   %016lx %03x\n", i, n.sym, n.next); break;
+			case NK_TYP		: printf("%03x | TY   %016lx %03x\n", i, n.sym, n.next); break;
+			case NK_NUM		: printf("%03x | NUM  %016lx %03x\n", i, n.sym, n.next); break;
+			case NK_QMK		: printf("%03x | ?    %03x\n", i, n.next); break;
+			case NK_CLN		: printf("%03x | :    %03x\n", i, n.next); break;
+			case NK_SEM		: printf("%03x | ;    %03x\n", i, n.next); break;
+			case NK_PER		: printf("%03x | .    %03x\n", i, n.next); break;
+			case NK_COM		: printf("%03x | ,    %03x\n", i, n.next); break;
+	
+			case NK_K_THR	: printf("%03x | thr  %03x\n", i, n.next); break;
+			case NK_K_DEF	: printf("%03x | def  %03x\n", i, n.next); break;
+			case NK_K_AXM	: printf("%03x | axm  %03x\n", i, n.next); break;
+			case NK_K_ALL	: printf("%03x | all  %03x\n", i, n.next); break;
+			case NK_K_EXS	: printf("%03x | exs  %03x\n", i, n.next); break;
+		}
+	}
+}
+

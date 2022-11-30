@@ -32,8 +32,10 @@ int main(int ac, char** av){
 		printf("%i tokens\n", tkls[i].tkct);
 		
 		printTokenList(&tkls[i]);
+		tkls[i].tkct--;
 		
 		nodeParser(&tkls[i], &ntbs[i], &syms);
+		printNodeTable(&ntbs[i]);
 	}
 	
 	

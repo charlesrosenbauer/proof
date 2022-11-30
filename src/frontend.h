@@ -95,7 +95,6 @@ typedef enum{
 
 typedef struct{
 	union{
-		uint64_t	num;
 		uint64_t	sym;
 		uint32_t	sub;
 	};
@@ -109,6 +108,6 @@ typedef struct{
 }NodeTable;
 
 int 	nodeParser		(TokenList*, NodeTable*, SymbolTable*);
-
+void	printNodeTable	(NodeTable*);
 
 #endif
