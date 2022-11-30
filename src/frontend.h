@@ -66,6 +66,32 @@ int				insertSymbol	(SymbolTable*, char*, int, int, int, Symbol);
 int 			lookupSymbol	(SymbolTable*, char*, int, int, int);
 
 
+typedef enum{
+	NK_NDF		=  0,
+	
+	NK_PNIL		=  1,
+	NK_CNIL		=  2,
+	NK_KNIL		=  3,
+	
+	NK_PSUB		=  4,
+	NK_CSUB		=  5,
+	NK_KSUB		=  6,
+	
+	NK_ID		=  7,
+	NK_TYP		=  8,
+	NK_NUM		=  9,
+	NK_QMK		= 10,
+	NK_CLN		= 11,
+	NK_SEM		= 12,
+	NK_PER		= 13,
+	NK_COM		= 14,
+	
+	NK_K_THR	= 15,
+	NK_K_DEF	= 16,
+	NK_K_AXM	= 17,
+	NK_K_ALL	= 18,
+	NK_K_EXS	= 19
+}NodeKind;
 
 typedef struct{
 	union{
@@ -74,7 +100,7 @@ typedef struct{
 		uint32_t	sub;
 	};
 	uint32_t	next;
-	TkType		kind;
+	NodeKind	kind;
 }Node;
 
 typedef struct{
