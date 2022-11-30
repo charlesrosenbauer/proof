@@ -73,9 +73,9 @@ typedef enum{
 	NK_CNIL		=  2,
 	NK_KNIL		=  3,
 	
-	NK_PSUB		=  4,
-	NK_CSUB		=  5,
-	NK_KSUB		=  6,
+	NK_PAR		=  4,
+	NK_BRK		=  5,
+	NK_BRC		=  6,
 	
 	NK_ID		=  7,
 	NK_TYP		=  8,
