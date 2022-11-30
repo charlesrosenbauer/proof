@@ -23,25 +23,7 @@ typedef enum{
 	TK_COLON,
 	TK_SEMI,
 	TK_PERIOD,
-	TK_COMMA,
-	
-	TK_ADD,
-	TK_SUB,
-	TK_MUL,
-	TK_DIV,
-	TK_MOD,
-	TK_EXP,
-	TK_AND,
-	TK_OR,
-	TK_XOR,
-	TK_NOT,
-	TK_LS,
-	TK_LSE,
-	TK_GT,
-	TK_GTE,
-	TK_EQ,
-	TK_NEQ,
-	TK_NCP
+	TK_COMMA
 }TkType;
 
 typedef struct{

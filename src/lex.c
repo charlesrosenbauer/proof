@@ -89,65 +89,6 @@ int lexer(TokenList* tkl){
 			}break;
 			case '.': {tkl->tks[tkix] = (Token){TK_PERIOD , i}; tkix++;}break;
 			case ',': {tkl->tks[tkix] = (Token){TK_COMMA  , i}; tkix++;}break;
-			
-			case '+': {tkl->tks[tkix] = (Token){TK_ADD    , i}; tkix++;}break;
-			case '-': {tkl->tks[tkix] = (Token){TK_SUB    , i}; tkix++;}break;
-			case '*':{
-				if(x1 == '*'){
-					tkl->tks[tkix] = (Token){TK_EXP    , i};
-					tkix++;
-					i++;
-				}else{
-					tkl->tks[tkix] = (Token){TK_MUL    , i};
-					tkix++;
-				}
-			}break;
-			case '/': {tkl->tks[tkix] = (Token){TK_DIV    , i}; tkix++;}break;
-			case '%': {tkl->tks[tkix] = (Token){TK_MOD    , i}; tkix++;}break;
-			case '&': {tkl->tks[tkix] = (Token){TK_AND    , i}; tkix++;}break;
-			case '|': {tkl->tks[tkix] = (Token){TK_OR     , i}; tkix++;}break;
-			case '^': {tkl->tks[tkix] = (Token){TK_XOR    , i}; tkix++;}break;
-			case '!':{
-				if(x1 == '='){
-					tkl->tks[tkix] = (Token){TK_NEQ    , i};
-					tkix++;
-					i++;
-				}else{
-					tkl->tks[tkix] = (Token){TK_NOT    , i};
-					tkix++;
-				}
-			}break;
-			case '>':{
-				if(x1 == '='){
-					tkl->tks[tkix] = (Token){TK_GTE    , i};
-					tkix++;
-					i++;
-				}else{
-					tkl->tks[tkix] = (Token){TK_GT     , i};
-					tkix++;
-				}
-			}break;
-			case '<':{
-				if(x1 == '>'){
-					tkl->tks[tkix] = (Token){TK_NCP    , i};
-					tkix++;
-					i++;
-				}else{
-					tkl->tks[tkix] = (Token){TK_LS     , i};
-					tkix++;
-				}
-			}break;
-			case '=':{
-				if(x1 == '<'){
-					tkl->tks[tkix] = (Token){TK_LSE    , i};
-					tkix++;
-					i++;
-				}else{
-					tkl->tks[tkix] = (Token){TK_EQ     , i};
-					tkix++;
-				}
-			}break;
-			
 			default: {
 				// ignore whitespace
 				if(x0 > ' '){
@@ -157,25 +98,9 @@ int lexer(TokenList* tkl){
 						tkix++;
 						for(int j = i+1; j < tkl->filesize; j++){
 							char n = tkl->text[j];
-							if(((n >= 'a') && (n <= 'z'))
-							|| ((n >= 'A') && (n <= 'Z'))
-							|| ((n >= '0') && (n <= '9'))
-							||  (n == '_') || (n == '@')){
-							}else{
-								i = j-1;
-								j = tkl->filesize;
-							}
-						}
-					}else if((x0 >= 'a') && (x0 <= 'z')){
-						// id
-						tkl->tks[tkix] = (Token){TK_ID     , i};
-						tkix++;
-						for(int j = i+1; j < tkl->filesize; j++){
-							char n = tkl->text[j];
-							if(((n >= 'a') && (n <= 'z'))
-							|| ((n >= 'A') && (n <= 'Z'))
-							|| ((n >= '0') && (n <= '9'))
-							||  (n == '_') || (n == '@')){
+							if((n != '(') && (n != ')') && (n != '[') && (n != ']')
+							&& (n != '{') && (n != '}') && (n != ':') && (n != ';')
+							&& (n != '.') && (n != ',') && (n != '?')){
 							}else{
 								i = j-1;
 								j = tkl->filesize;
@@ -196,8 +121,19 @@ int lexer(TokenList* tkl){
 							}
 						}
 					}else{
-						printf("Unexpected symbol (%c) @%i:%i\n", tkl->text[i], ln, cl);
-						return 0;
+						// id
+						tkl->tks[tkix] = (Token){TK_ID     , i};
+						tkix++;
+						for(int j = i+1; j < tkl->filesize; j++){
+							char n = tkl->text[j];
+							if((n != '(') && (n != ')') && (n != '[') && (n != ']')
+							&& (n != '{') && (n != '}') && (n != ':') && (n != ';')
+							&& (n != '.') && (n != ',') && (n != '?')){
+							}else{
+								i = j-1;
+								j = tkl->filesize;
+							}
+						}
 					}
 				}
 			}break;
@@ -254,24 +190,6 @@ void printTokenList(TokenList* tkl){
 			case TK_SEMI    : printf("SEMI   \n"); break;
 			case TK_PERIOD  : printf("PERIOD \n"); break;
 			case TK_COMMA   : printf("COMMA  \n"); break;
-	
-			case TK_ADD     : printf("ADD    \n"); break;
-			case TK_SUB     : printf("SUB    \n"); break;
-			case TK_MUL     : printf("MUL    \n"); break;
-			case TK_DIV     : printf("DIV    \n"); break;
-			case TK_MOD     : printf("MOD    \n"); break;
-			case TK_EXP     : printf("EXP    \n"); break;
-			case TK_AND     : printf("AND    \n"); break;
-			case TK_OR      : printf("OR     \n"); break;
-			case TK_XOR     : printf("XOR    \n"); break;
-			case TK_NOT     : printf("NOT    \n"); break;
-			case TK_LS      : printf("LS     \n"); break;
-			case TK_LSE     : printf("LSE    \n"); break;
-			case TK_GT      : printf("GT     \n"); break;
-			case TK_GTE     : printf("GTE    \n"); break;
-			case TK_EQ      : printf("EQ     \n"); break;
-			case TK_NEQ     : printf("NEQ    \n"); break;
-			case TK_NCP     : printf("NCP    \n"); break;
 		}
 	}
 }
