@@ -87,7 +87,8 @@ typedef struct{
 }Theorem;
 
 typedef struct{
-	Definition*	defs;
+	Definition*	ds;
+	int			dct, dcap;
 
 	Theorem*	ts;
 	int			tct, tcap;
@@ -98,7 +99,8 @@ typedef struct{
 
 
 
-
+void		printDefinition		(Definition);
+void		printMathTable		(MathTable);
 
 
 #endif

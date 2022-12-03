@@ -45,3 +45,53 @@ void printDefinition(Definition d){
 		}
 	}
 }
+
+
+
+void printModel(Model m){
+	printf("====MD %03x (%03x)====\n", m.id, m.def);
+	printf("  FIELDS [%i]:\n", m.fct);
+	for(int i = 0; i < m.fct; i++)
+		printf("    #%03x : #%03x\n", m.field[i], m.fldef[i]);
+	
+	printf("  OPS [%i]:\n", m.oct);
+	for(int i = 0; i < m.oct; i++)
+		printf("    #%03x : #%03x\n", m.op   [i], m.opdef[i]);
+	
+	printf("  AXIOMS [%i]:\n", m.xct);
+	for(int i = 0; i < m.xct; i++)
+		printf("    #%03x : #%03x\n", m.axiom[i], m.axdef[i]);
+}
+
+
+
+void printTheorem(Theorem t){
+	printf("====TH %03x (%03x)====\n", t.id, t.def);
+	printf("  assume : %03x\n", t.assumption );
+	printf("  imply  : %03x\n", t.implication);
+	printf("  proof [%i]:\n"  , t.pct);
+	for(int i = 0; i < t.pct; i++) printf("    %03x\n", t.proof[i]);
+}
+
+
+
+void printMathTable(MathTable mtab){
+	printf("<<DEFINITIONS [%i]>>\n\n", mtab.dct);
+	for(int i = 0; i < mtab.dct; i++){
+		printf("====[D %03x : %i/%i]====\n", i, mtab.ds[i].fill, mtab.ds[i].size);
+		printDefinition(mtab.ds[i]);
+		printf("\n");
+	}
+	
+	printf("<<THEOREMS [%i]>>\n\n", mtab.tct);
+	for(int i = 0; i < mtab.tct; i++){
+		printTheorem(mtab.ts[i]);
+		printf("\n");
+	}
+	
+	printf("<<MODELS [%i]>>\n\n", mtab.mct);
+	for(int i = 0; i < mtab.mct; i++){
+		printModel(mtab.ms[i]);
+		printf("\n");
+	}
+}
