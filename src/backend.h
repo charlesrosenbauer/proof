@@ -19,6 +19,7 @@ typedef enum{
 	BK_TSUM		= 0x007,
 	BK_TFUN		= 0x008,
 	BK_BIND		= 0x009,
+	BK_REC		= 0x00A,
 
 	// Statements
 	BK_FORALL	= 0x100,
@@ -36,7 +37,8 @@ typedef enum{
 	BK_CONTRA	= 0x203,
 	BK_ASSUME	= 0x204,
 	BK_CONJCT	= 0x205,
-	BK_EQUIV	= 0x206
+	BK_EQUIV	= 0x206,
+	BK_INDUCT	= 0x207
 }BCKind;
 
 typedef struct{
