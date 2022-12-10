@@ -65,3 +65,16 @@
 		[forall (R a b)   : (= (< a (> b a)) b)])
 }
 
+
+
+;; QUANDLE
+{def Quandle
+	(Rack Q)
+	
+	(axiom id
+		[forall (Q a) : (= (< a a) a)])
+}
+
+
+
+
