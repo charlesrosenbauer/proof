@@ -103,6 +103,10 @@ typedef struct{
 }Node;
 
 typedef struct{
+	int*	comms;
+	int*	cmixs;
+	int		cmct;
+
 	Node*	nodes;
 	int		fill;
 }NodeTable;

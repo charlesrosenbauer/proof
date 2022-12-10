@@ -89,6 +89,9 @@ int subParser(TokenList* tkl, NodeTable* ntab, SymbolTable* stab, int start, int
 				// Probably just drop this
 				// Or maybe have a separate data structure for comments
 				// which we link to the next/previous node
+				ntab->comms[ntab->cmct] = i;
+				ntab->cmixs[ntab->cmct] = ntab->fill+1;
+				ntab->cmct++;
 			}break;
 			
 			case TK_QMK    : {
@@ -135,6 +138,10 @@ int subParser(TokenList* tkl, NodeTable* ntab, SymbolTable* stab, int start, int
 int nodeParser(TokenList* tkl, NodeTable* ntab, SymbolTable* stab){
 	ntab->nodes = malloc(sizeof(Node) * tkl->tkct);
 	ntab->fill  = 0;
+	
+	ntab->comms = malloc(sizeof(int ) * tkl->tkct);
+	ntab->cmixs = malloc(sizeof(int ) * tkl->tkct);
+	ntab->cmct  = 0;
 	
 	TkType* stack = alloca(sizeof(TkType) * tkl->tkct);
 	int   stk = 0;
@@ -220,5 +227,8 @@ void printNodeTable(NodeTable* ntab){
 			case NK_K_EXS	: printf("%03x | exs  %03x\n", i, n.next); break;
 		}
 	}
+	printf("====COMS [%i]====\n", ntab->cmct);
+	for(int i = 0; i < ntab->cmct; i++)
+		printf("@%03x %03x\n", ntab->cmixs[i], ntab->comms[i]);
 }
 
