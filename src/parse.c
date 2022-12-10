@@ -225,6 +225,7 @@ void printNodeTable(NodeTable* ntab){
 			case NK_K_AXM	: printf("%03x | axm  %03x\n", i, n.next); break;
 			case NK_K_ALL	: printf("%03x | all  %03x\n", i, n.next); break;
 			case NK_K_EXS	: printf("%03x | exs  %03x\n", i, n.next); break;
+			case NK_K_FNC	: printf("%03x | fnc  %03x\n", i, n.next); break;
 		}
 	}
 	printf("====COMS [%i]====\n", ntab->cmct);

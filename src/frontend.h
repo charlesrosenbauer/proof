@@ -90,7 +90,8 @@ typedef enum{
 	NK_K_DEF	= 16,
 	NK_K_AXM	= 17,
 	NK_K_ALL	= 18,
-	NK_K_EXS	= 19
+	NK_K_EXS	= 19,
+	NK_K_FNC	= 20
 }NodeKind;
 
 typedef struct{
