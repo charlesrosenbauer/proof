@@ -59,20 +59,21 @@ int lexer(TokenList* tkl){
 		char x1 = (i+1 < tkl->filesize)? tkl->text[i+1] : 0;
 		
 		switch(x0){
-			case '(': {tkl->tks[tkix] = (Token){TK_OPN_PAR, i}; tkix++;} break;
-			case '[': {tkl->tks[tkix] = (Token){TK_OPN_BRK, i}; tkix++;}break;
-			case '{': {tkl->tks[tkix] = (Token){TK_OPN_BRC, i}; tkix++;}break;
+			case '(': {tkl->tks[tkix] = (Token){TK_OPN_PAR, i}; tkl->poss[tkix] = (Position){ln, cl}; tkix++;} break;
+			case '[': {tkl->tks[tkix] = (Token){TK_OPN_BRK, i}; tkl->poss[tkix] = (Position){ln, cl}; tkix++;}break;
+			case '{': {tkl->tks[tkix] = (Token){TK_OPN_BRC, i}; tkl->poss[tkix] = (Position){ln, cl}; tkix++;}break;
 			
-			case ')': {tkl->tks[tkix] = (Token){TK_END_PAR, i}; tkix++;}break;
-			case ']': {tkl->tks[tkix] = (Token){TK_END_BRK, i}; tkix++;}break;
-			case '}': {tkl->tks[tkix] = (Token){TK_END_BRC, i}; tkix++;}break;
+			case ')': {tkl->tks[tkix] = (Token){TK_END_PAR, i}; tkl->poss[tkix] = (Position){ln, cl}; tkix++;}break;
+			case ']': {tkl->tks[tkix] = (Token){TK_END_BRK, i}; tkl->poss[tkix] = (Position){ln, cl}; tkix++;}break;
+			case '}': {tkl->tks[tkix] = (Token){TK_END_BRC, i}; tkl->poss[tkix] = (Position){ln, cl}; tkix++;}break;
 			
-			case '?': {tkl->tks[tkix] = (Token){TK_QMK    , i}; tkix++;}break;
-			case ':': {tkl->tks[tkix] = (Token){TK_COLON  , i}; tkix++;}break;
+			case '?': {tkl->tks[tkix] = (Token){TK_QMK    , i}; tkl->poss[tkix] = (Position){ln, cl}; tkix++;}break;
+			case ':': {tkl->tks[tkix] = (Token){TK_COLON  , i}; tkl->poss[tkix] = (Position){ln, cl}; tkix++;}break;
 			case ';':{
 				if(x1 == ';'){
 					// ;; comment
-					tkl->tks[tkix] = (Token){TK_COM , i};
+					tkl->tks [tkix] = (Token   ){TK_COM , i};
+					tkl->poss[tkix] = (Position){ln, cl};
 					tkix++;
 					for(int j = i; j < tkl->filesize; j++){
 						if(tkl->text[j] == '\n'){
@@ -83,18 +84,20 @@ int lexer(TokenList* tkl){
 						}
 					}
 				}else{
-					tkl->tks[tkix] = (Token){TK_SEMI, i};
+					tkl->tks [tkix] = (Token   ){TK_SEMI, i};
+					tkl->poss[tkix] = (Position){ln, cl};
 					tkix++;
 				}
 			}break;
-			case '.': {tkl->tks[tkix] = (Token){TK_PERIOD , i}; tkix++;}break;
-			case ',': {tkl->tks[tkix] = (Token){TK_COMMA  , i}; tkix++;}break;
+			case '.': {tkl->tks[tkix] = (Token){TK_PERIOD , i}; tkl->poss[tkix] = (Position){ln, cl}; tkix++;}break;
+			case ',': {tkl->tks[tkix] = (Token){TK_COMMA  , i}; tkl->poss[tkix] = (Position){ln, cl}; tkix++;}break;
 			default: {
 				// ignore whitespace
 				if(x0 > ' '){
 					if((x0 >= 'A') && (x0 <= 'Z')){
 						// tyid
-						tkl->tks[tkix] = (Token){TK_TYID   , i};
+						tkl->tks [tkix] = (Token   ){TK_TYID   , i};
+						tkl->poss[tkix] = (Position){ln, cl};
 						tkix++;
 						for(int j = i+1; j < tkl->filesize; j++){
 							char n = tkl->text[j];
@@ -108,7 +111,8 @@ int lexer(TokenList* tkl){
 						}
 					}else if((x0 >= '0') && (x0 <= '9')){
 						// num
-						tkl->tks[tkix] = (Token){TK_NUM    , i};
+						tkl->tks [tkix] = (Token   ){TK_NUM    , i};
+						tkl->poss[tkix] = (Position){ln, cl};
 						tkix++;
 						for(int j = i+1; j < tkl->filesize; j++){
 							i++;
@@ -122,7 +126,8 @@ int lexer(TokenList* tkl){
 						}
 					}else{
 						// id
-						tkl->tks[tkix] = (Token){TK_ID     , i};
+						tkl->tks [tkix] = (Token   ){TK_ID     , i};
+						tkl->poss[tkix] = (Position){ln, cl};
 						tkix++;
 						for(int j = i+1; j < tkl->filesize; j++){
 							char n = tkl->text[j];
@@ -141,8 +146,10 @@ int lexer(TokenList* tkl){
 		if(x0 == '\n'){
 			ln++;
 			cl=1;
+		}else if(x0 == '\t'){
+			cl  = (cl+4 & -4) + 1;
 		}else{
-			cl += (x0 == '\t')? 4 : 1;
+			cl++;
 		}
 	}
 	
@@ -168,7 +175,7 @@ int tokenLen(TokenList* tkl, int ix){
 void printTokenList(TokenList* tkl){
 	printf("====TOKS [F%02i] %04iTS====\n", tkl->fileId, tkl->tkct);
 	for(int i = 0; i < tkl->tkct; i++){
-		printf("%03i %02i | ", i, tokenLen(tkl, i));
+		printf("%03i %02i @ (%04i, %03i)| ", i, tokenLen(tkl, i), tkl->poss[i].line, tkl->poss[i].column);
 	
 		switch(tkl->tks[i].kind){
 			case TK_NIL     : printf("<NIL>  \n"); break;

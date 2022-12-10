@@ -58,7 +58,7 @@
 	(axiom left-self-distrib
 		[forall (R a b c) : (= (< a (< b c)) (< (< a b) (< a c)))])
 	(axiom right-self-distrib
-		[forall (R a b c) : (= (> (> c b) a)) (> (> c a) (> b a)))])
+		[forall (R a b c) : (= (> (> c b) a) (> (> c a) (> b a)))])
 	(axiom left-equiv
 		[forall (R a b)   : (= (> (< a b) a) b)])
 	(axiom right-equiv
