@@ -34,7 +34,10 @@ int main(int ac, char** av){
 		printTokenList(&tkls[i]);
 		tkls[i].tkct--;
 		
-		nodeParser(&tkls[i], &ntbs[i], &syms);
+		if(!nodeParser(&tkls[i], &ntbs[i], &syms)){
+			printf("Node parser failed!\n");
+			return 0;
+		}
 		printNodeTable(&ntbs[i]);
 	}
 	

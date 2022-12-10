@@ -78,6 +78,9 @@ int subParser(TokenList* tkl, NodeTable* ntab, SymbolTable* stab, int start, int
 				int pos = tkl->tks[i].pos;
 				int len = tokenLen(tkl, i);
 				int sym = insertSymbol(stab, tkl->text, pos, len, tkl->filesize, (Symbol){.fileId=tkl->fileId, .filePos=pos});
+				nix = newNode(ntab);
+				ntab->nodes[nix].kind = (k == TK_ID)? NK_ID : NK_TYP;
+				ntab->nodes[nix].next = 0;
 			}break;
 			case TK_NUM		: {
 				// Parse number
@@ -88,17 +91,39 @@ int subParser(TokenList* tkl, NodeTable* ntab, SymbolTable* stab, int start, int
 				// which we link to the next/previous node
 			}break;
 			
-			case TK_QMK    : break;
-			case TK_COLON  : break;
-			case TK_SEMI   : break;
-			case TK_PERIOD : break;
-			case TK_COMMA  : break;
+			case TK_QMK    : {
+				nix = newNode(ntab);
+				ntab->nodes[nix].kind = NK_QMK;
+				ntab->nodes[nix].next = 0;
+			} break;
+			case TK_COLON  : {
+				nix = newNode(ntab);
+				ntab->nodes[nix].kind = NK_CLN;
+				ntab->nodes[nix].next = 0;
+			} break;
+			case TK_SEMI   : {
+				nix = newNode(ntab);
+				ntab->nodes[nix].kind = NK_SEM;
+				ntab->nodes[nix].next = 0;
+			} break;
+			case TK_PERIOD : {
+				nix = newNode(ntab);
+				ntab->nodes[nix].kind = NK_PER;
+				ntab->nodes[nix].next = 0;
+			} break;
+			case TK_COMMA  : {
+				nix = newNode(ntab);
+				ntab->nodes[nix].kind = NK_COM;
+				ntab->nodes[nix].next = 0;
+			} break;
 			
 			default : {
 				printf("ERROR : Unexpected symbol @ %i\n", i);
 				return -1;
 			}break;
 		}
+		
+		
 	}
 	
 	//printf("ERROR : Ran out of contents\n");
@@ -156,11 +181,7 @@ int nodeParser(TokenList* tkl, NodeTable* ntab, SymbolTable* stab){
 		printf("%i missing close wrappers\n", stk);
 		return 0;
 	}
-	
-	
-	subParser(tkl, ntab, stab, 0, 0);
-	
-	
+	if(subParser(tkl, ntab, stab, 0, 0) < 0) return 0;
 	return 1;
 }
 
