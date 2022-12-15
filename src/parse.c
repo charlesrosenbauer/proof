@@ -11,6 +11,33 @@ int newNode(NodeTable* ntab){
 	return ntab->fill-1;
 }
 
+typedef struct{
+	int32_t	start, end, parent, depth;
+}Range;
+
+
+/*
+	TODO:
+	* record ranges between () [] {}
+	* track parent/child nesting of ranges
+	* parse, starting with deepest ranges
+	* propagate range sizes up to parents, shrinking parents accordingly
+	* build a table of arrays of nodes
+	
+	* varargs pattern matching functions
+	* comment/tag tokens can be extracted and stored elsewhere as decorators
+*/
+
+
+
+
+
+
+
+
+
+
+
 
 int subParser(TokenList* tkl, NodeTable* ntab, SymbolTable* stab, int start, int depth){
 	// TODO : parsing

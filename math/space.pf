@@ -1,0 +1,17 @@
+
+
+;; METRIC SPACE
+{def Metric-Space
+	(Set M)
+	(dist  (; (M M) Real))
+	
+	(axiom self-distance
+		[forall (M x) : (= 0 (dist x x))])
+	(axiom positivity
+		[forall (M x y) : (or (= x y) (> 0 (dist x y)))])
+	(axiom symmetry
+		[forall (M x y) : (= (dist x y) (dist y x))])
+	(axiom triangle
+		[forall (M x y z) : (=< (dist x z) (+ (dist x y) (dist y z)))])
+}
+
