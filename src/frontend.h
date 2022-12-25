@@ -95,21 +95,28 @@ typedef enum{
 }NodeKind;
 
 typedef struct{
+	NodeKind kind;
+	int      tkix;
 	union{
-		uint64_t	sym;
-		uint32_t	sub;
+		uint32_t	n;
+		uint64_t	u;
+		int64_t		i;
+		TkType		t;
 	};
-	uint32_t	next;
-	NodeKind	kind;
 }Node;
 
 typedef struct{
-	int*	comms;
-	int*	cmixs;
-	int		cmct;
+	int head, tail, size;
+	int parent, depth;
+}Range;
 
-	Node*	nodes;
-	int		fill;
+typedef struct{
+	Range*			ranges;
+	Node*			nodes;
+	int				nsize, nfill;
+	
+	uint32_t*		defs;
+	int 			dsize, dfill;
 }NodeTable;
 
 int 	nodeParser		(TokenList*, NodeTable*, SymbolTable*);
