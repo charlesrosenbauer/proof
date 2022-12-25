@@ -1,56 +1,29 @@
 #include "stdint.h"
 #include "stdlib.h"
 #include "string.h"
+#include "assert.h"
 #include "stdio.h"
 
 #include "frontend.h"
 
 
 int newNode(NodeTable* ntab){
-	ntab->fill++;
-	return ntab->fill-1;
+	ntab->nfill++;
+	return ntab->nfill-1;
 }
 
-typedef struct{
-	int32_t	start, end, parent, depth;
-}Range;
-
-typedef struct{
-	Range*	rs;
-	int		size, fill;
-}RangeTable;
-
-
-/*
-	TODO:
-	* record ranges between () [] {}
-	* track parent/child nesting of ranges
-	* parse, starting with deepest ranges
-	* propagate range sizes up to parents, shrinking parents accordingly
-	* build a table of arrays of nodes
-	
-	* varargs pattern matching functions
-	* comment/tag tokens can be extracted and stored elsewhere as decorators
-*/
 
 
 
-
-
-
-
-
-
-int	parseNode(Compiler* cmp, FileId file){
-	TokenData* td = &cmp->tdata[file];
+int	parseNode(TokenList* tkl, NodeTable* ntab, SymbolTable* syms){
 	Range*     rs = malloc(sizeof(Range) * td->tkct);
 	int       rct = 0;
 	
 	int maxdp = 0;
 	int depth = -1;
 	int head  = -1;
-	for(int i = 0; i < td->tkct; i++){
-		TkType type = td->tks[i].type;
+	for(int i = 0; i < tkl->tkct; i++){
+		TkType type = tkl->tks[i].kind;
 		if(type >= TK_BTM_WRP){
 			if      (type < TK_MID_WRP){
 				// start new subrange
@@ -91,74 +64,68 @@ int	parseNode(Compiler* cmp, FileId file){
 	
 	int defs   = 0;
 	int size   = 0;
-	int* heads = malloc(sizeof(int) * td->tkct);
-	for(int i  = 0; i < td->tkct; i++) heads[i] = -1;
+	int* heads = malloc(sizeof(int) * tkl->tkct);
+	for(int i  = 0; i < tkl->tkct; i++) heads[i] = -1;
 	for(int i  = 0; i < rct; i++){
 		size  += rs[i].size;
 		defs  += rs[i].depth == 0;
 		if(heads >= 0) heads[rs[i].head] = i;
 	}
 	
-	cmp->ntabs[file] = makeNodeProgram(size * 2, defs);
-	cmp->ntabs[file].ranges = rs;
+	ntab->nodes  = malloc(sizeof(Node) * tkl->tkct * 2);
+	ntab->nsize  = tkl->tkct;
+	ntab->nfill  = 0;
+	ntab->ranges = rs;
 	
 	for(int i = maxdp; i >= 0; i--){
 		for(int j = 0; j < rct; j++){
 			if(rs[j].depth == i){
-				// TODO: build 
-				int pos = cmp->ntabs[file].nfill;
-				cmp->ntabs[file].nfill += rs[j].size;
+				int pos = ntab->nfill;
+				ntab->nfill += rs[j].size;
 				
-				int ix = cmp->ntabs[file].nfill;
+				int ix = ntab->nfill;
 				for(int k = rs[j].head; k < rs[j].tail; k++){
 					assert(ix >= 0);
 					assert(k  >= 0);
-					cmp->ntabs[file].nodes[ix] = (Node){.t=td->tks[k].type};
+					ntab->nodes[ix] = (Node){.t=tkl->tks[k].kind};
 					if((heads[k] >= 0) && (heads[k] != rs[j].head)){
 						Node n;
-						switch(td->tks[k].type){
+						switch(tkl->tks[k].kind){
 							case TK_OPN_PAR : { n.n = heads[k]; n.kind = NK_PAR; } break;
 							case TK_OPN_BRK : { n.n = heads[k]; n.kind = NK_BRK; } break;
 							case TK_OPN_BRC : { n.n = heads[k]; n.kind = NK_BRC; } break;
-							default : { printf("BAD CASE %i\n", td->tks[k].type); exit(-1); } break;
+							default : { printf("BAD CASE %i\n", tkl->tks[k].kind); exit(-1); } break;
 						}
 						assert(heads[k] >= 0);
 						k = rs[heads[k]].tail;
 						assert(ix >= 0);
-						cmp->ntabs[file].nodes[ix] = n;
+						ntab->nodes[ix] = n;
 					}else{
 						assert(ix >= 0);
-						Node n = cmp->ntabs[file].nodes[ix];
-						switch(td->tks[k].type){
-							case TK_INT  : n.kind = NK_INT ; break;
-							case TK_FLT  : n.kind = NK_FLT ; break;
-							case TK_STR  : n.kind = NK_STR ; break;
-							case TK_MID  : n.kind = NK_MID ; break;
-							case TK_ID   : n.kind = NK_ID  ; break;
-							case TK_TVAR : n.kind = NK_TVAR; break;
-							case TK_TYID : n.kind = NK_TYID; break;
-							default      : n.kind = NK_OP  ; break;
+						Node n = ntab->nodes[ix];
+						switch(tkl->tks[k].kind){
+							case TK_NUM : n.kind = NK_NUM; break;
+							case TK_ID  : n.kind = NK_ID ; break;
+							case TK_TYID: n.kind = NK_TYP; break;
+							default     : n.kind = NK_COM; break;	// Bad solution for now
 						}
-						cmp->ntabs[file].nodes[ix] = n;
+						ntab->nodes[ix] = n;
 					}
 					ix++;
 				}
 				
 				
 				if(!i){
-					assert(cmp->ntabs[file].dfill >= 0);
-					cmp->ntabs[file].defs[cmp->ntabs[file].dfill] = pos;
-					cmp->ntabs[file].dfill++;
+					assert(ntab->dfill >= 0);
+					ntab->defs[ntab->dfill] = pos;
+					ntab->dfill++;
 				}
 			}
 		}
 	}
 	
-	printf("========FILE %03x========\n", file);
 	for(int i = 0; i < rct; i++)
 		printf("R%03i : H%04i T%04i > P%04i D%02i\n", i, rs[i].head, rs[i].tail, rs[i].parent, rs[i].depth);
-	
-	printNodeProgram(&cmp->ntabs[file]);
 	
 	free(heads);
 	return 1;
@@ -167,6 +134,7 @@ int	parseNode(Compiler* cmp, FileId file){
 
 
 void printNodeTable(NodeTable* ntab){
+	/*
 	printf("====NTAB [%i]====\n", ntab->fill);
 	for(int i = 0; i < ntab->fill; i++){
 		Node n = ntab->nodes[i];
@@ -200,6 +168,6 @@ void printNodeTable(NodeTable* ntab){
 	}
 	printf("====COMS [%i]====\n", ntab->cmct);
 	for(int i = 0; i < ntab->cmct; i++)
-		printf("@%03x %03x\n", ntab->cmixs[i], ntab->comms[i]);
+		printf("@%03x %03x\n", ntab->cmixs[i], ntab->comms[i]);*/
 }
 
