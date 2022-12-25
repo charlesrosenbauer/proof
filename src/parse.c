@@ -15,6 +15,11 @@ typedef struct{
 	int32_t	start, end, parent, depth;
 }Range;
 
+typedef struct{
+	Range*	rs;
+	int		size, fill;
+}RangeTable;
+
 
 /*
 	TODO:
@@ -36,190 +41,128 @@ typedef struct{
 
 
 
-
-
-
-int subParser(TokenList* tkl, NodeTable* ntab, SymbolTable* stab, int start, int depth){
-	// TODO : parsing
-	for(int i = start; i < tkl->tkct; i++){
-		TkType k  = tkl->tks[i].kind;
-		TkType kn = (i+1 < tkl->tkct)? tkl->tks[i+1].kind : TK_NIL;
-		
-		int   nix = 0;
-		switch(k){
-			case TK_OPN_PAR : {
-				if(kn == TK_END_PAR){
-					nix = newNode(ntab);
-					ntab->nodes[nix] = (Node){.next=0, .kind=NK_PNIL};
-					i++;
-				}else{
-					int ret = subParser(tkl, ntab, stab, i+1, depth+1);
-					if( ret < 0) return -1;
-					if(ntab->fill-1 != nix){
-						ntab->nodes[nix].kind = NK_PAR;
-						ntab->nodes[nix].next = nix+1;
-					}
-					i   = ret;
-				}
-			}break;
-			case TK_OPN_BRK : {
-				if(kn == TK_END_PAR){
-					nix = newNode(ntab);
-					ntab->nodes[nix] = (Node){.next=0, .kind=NK_KNIL};
-					i++;
-				}else{
-					int ret = subParser(tkl, ntab, stab, i+1, depth+1);
-					if( ret < 0) return -1;
-					if(ntab->fill-1 != nix){
-						ntab->nodes[nix].kind = NK_BRK;
-						ntab->nodes[nix].next = nix+1;
-					}
-					i   = ret;
-				}
-			}break;
-			case TK_OPN_BRC : {
-				if(kn == TK_END_PAR){
-					nix = newNode(ntab);
-					ntab->nodes[nix] = (Node){.next=0, .kind=NK_CNIL};
-					i++;
-				}else{
-					int ret = subParser(tkl, ntab, stab, i+1, depth+1);
-					if( ret < 0) return -1;
-					if(ntab->fill-1 != nix){
-						ntab->nodes[nix].kind = NK_BRC;
-						ntab->nodes[nix].next = nix+1;
-					}
-					i   = ret;
-				}
-			}break;
-			
-			case TK_END_PAR :
-			case TK_END_BRK :
-			case TK_END_BRC : {
-				return i;
-			}break;
-			
-			case TK_TYID	:
-			case TK_ID		: {
-				// Get symbol from symbol table
-				int pos = tkl->tks[i].pos;
-				int len = tokenLen(tkl, i);
-				int sym = insertSymbol(stab, tkl->text, pos, len, tkl->filesize, (Symbol){.fileId=tkl->fileId, .filePos=pos});
-				nix = newNode(ntab);
-				ntab->nodes[nix].kind = (k == TK_ID)? NK_ID : NK_TYP;
-				ntab->nodes[nix].next = 0;
-			}break;
-			case TK_NUM		: {
-				// Parse number
-			}break;
-			case TK_COM		: {
-				// Probably just drop this
-				// Or maybe have a separate data structure for comments
-				// which we link to the next/previous node
-				ntab->comms[ntab->cmct] = i;
-				ntab->cmixs[ntab->cmct] = ntab->fill+1;
-				ntab->cmct++;
-			}break;
-			
-			case TK_QMK    : {
-				nix = newNode(ntab);
-				ntab->nodes[nix].kind = NK_QMK;
-				ntab->nodes[nix].next = 0;
-			} break;
-			case TK_COLON  : {
-				nix = newNode(ntab);
-				ntab->nodes[nix].kind = NK_CLN;
-				ntab->nodes[nix].next = 0;
-			} break;
-			case TK_SEMI   : {
-				nix = newNode(ntab);
-				ntab->nodes[nix].kind = NK_SEM;
-				ntab->nodes[nix].next = 0;
-			} break;
-			case TK_PERIOD : {
-				nix = newNode(ntab);
-				ntab->nodes[nix].kind = NK_PER;
-				ntab->nodes[nix].next = 0;
-			} break;
-			case TK_COMMA  : {
-				nix = newNode(ntab);
-				ntab->nodes[nix].kind = NK_COM;
-				ntab->nodes[nix].next = 0;
-			} break;
-			
-			default : {
-				printf("ERROR : Unexpected symbol @ %i\n", i);
-				return -1;
-			}break;
-		}
-		
-		
-	}
+int	parseNode(Compiler* cmp, FileId file){
+	TokenData* td = &cmp->tdata[file];
+	Range*     rs = malloc(sizeof(Range) * td->tkct);
+	int       rct = 0;
 	
-	//printf("ERROR : Ran out of contents\n");
-	//return -1;
-	return 0;
-}
-
-
-int nodeParser(TokenList* tkl, NodeTable* ntab, SymbolTable* stab){
-	ntab->nodes = malloc(sizeof(Node) * tkl->tkct);
-	ntab->fill  = 0;
-	
-	ntab->comms = malloc(sizeof(int ) * tkl->tkct);
-	ntab->cmixs = malloc(sizeof(int ) * tkl->tkct);
-	ntab->cmct  = 0;
-	
-	TkType* stack = alloca(sizeof(TkType) * tkl->tkct);
-	int   stk = 0;
-	for(int i = 0; i < tkl->tkct; i++){
-		TkType k = tkl->tks[i].kind;
-		switch(k){
-			case TK_OPN_PAR : {stack[stk] = TK_OPN_PAR; stk++;} break;
-			case TK_OPN_BRK : {stack[stk] = TK_OPN_BRK; stk++;} break;
-			case TK_OPN_BRC : {stack[stk] = TK_OPN_BRC; stk++;} break;
-			case TK_END_PAR : {
-				stk--;
-				if(stk < 0){
-					printf("Unmatched parens %i\n", i);
-					return 0;
-				}else if(stack[stk] != TK_OPN_PAR){
-					printf("Missing open parens %i\n", i);
-					return 0;
-				}
-			}break;
-			case TK_END_BRK : {
-				stk--;
-				if(stk < 0){
-					printf("Unmatched bracket %i\n", i);
-					return 0;
-				}else if(stack[stk] != TK_OPN_BRK){
-					printf("Missing open bracket %i\n", i);
+	int maxdp = 0;
+	int depth = -1;
+	int head  = -1;
+	for(int i = 0; i < td->tkct; i++){
+		TkType type = td->tks[i].type;
+		if(type >= TK_BTM_WRP){
+			if      (type < TK_MID_WRP){
+				// start new subrange
+				depth++;
+				maxdp = (maxdp < depth)? depth : maxdp;
+				assert(rct >= 0);
+				rs[rct]   = (Range){
+					.head   = i,
+					.tail   = 0,
+					.size   = 1,
+					
+					.parent = head,
+					.depth  = depth
+				};
+				if(head >= 0) rs[head].size++;
+				head = rct;
+				rct++;
+				
+				
+			}else if(type <= TK_TOP_WRP){
+				// end subrange, switch head to previous
+				if(head >= 0){
+					assert(head >= 0);
+					rs[head].tail = i;
+					head = rs[head].parent;
+					depth--;
+				}else{
+					printf("FAIL\n");
+					free(rs);
 					return 0;
 				}
-			}break;
-			case TK_END_BRC : {
-				stk--;
-				if(stk < 0){
-					printf("Unmatched brace %i\n", i);
-					return 0;
-				}else if(stack[stk] != TK_OPN_BRC){
-					printf("Missing open brace %i\n", i);
-					return 0;
-				}
-			}break;
-			default : break;
+			}
+		}else if(head >= 0){
+			assert(head >= 0);
+			rs[head].size++;
 		}
 	}
-	if(stk > 0){
-		printf("%i missing close wrappers\n", stk);
-		return 0;
+	
+	int defs   = 0;
+	int size   = 0;
+	int* heads = malloc(sizeof(int) * td->tkct);
+	for(int i  = 0; i < td->tkct; i++) heads[i] = -1;
+	for(int i  = 0; i < rct; i++){
+		size  += rs[i].size;
+		defs  += rs[i].depth == 0;
+		if(heads >= 0) heads[rs[i].head] = i;
 	}
-	if(subParser(tkl, ntab, stab, 0, 0) < 0) return 0;
+	
+	cmp->ntabs[file] = makeNodeProgram(size * 2, defs);
+	cmp->ntabs[file].ranges = rs;
+	
+	for(int i = maxdp; i >= 0; i--){
+		for(int j = 0; j < rct; j++){
+			if(rs[j].depth == i){
+				// TODO: build 
+				int pos = cmp->ntabs[file].nfill;
+				cmp->ntabs[file].nfill += rs[j].size;
+				
+				int ix = cmp->ntabs[file].nfill;
+				for(int k = rs[j].head; k < rs[j].tail; k++){
+					assert(ix >= 0);
+					assert(k  >= 0);
+					cmp->ntabs[file].nodes[ix] = (Node){.t=td->tks[k].type};
+					if((heads[k] >= 0) && (heads[k] != rs[j].head)){
+						Node n;
+						switch(td->tks[k].type){
+							case TK_OPN_PAR : { n.n = heads[k]; n.kind = NK_PAR; } break;
+							case TK_OPN_BRK : { n.n = heads[k]; n.kind = NK_BRK; } break;
+							case TK_OPN_BRC : { n.n = heads[k]; n.kind = NK_BRC; } break;
+							default : { printf("BAD CASE %i\n", td->tks[k].type); exit(-1); } break;
+						}
+						assert(heads[k] >= 0);
+						k = rs[heads[k]].tail;
+						assert(ix >= 0);
+						cmp->ntabs[file].nodes[ix] = n;
+					}else{
+						assert(ix >= 0);
+						Node n = cmp->ntabs[file].nodes[ix];
+						switch(td->tks[k].type){
+							case TK_INT  : n.kind = NK_INT ; break;
+							case TK_FLT  : n.kind = NK_FLT ; break;
+							case TK_STR  : n.kind = NK_STR ; break;
+							case TK_MID  : n.kind = NK_MID ; break;
+							case TK_ID   : n.kind = NK_ID  ; break;
+							case TK_TVAR : n.kind = NK_TVAR; break;
+							case TK_TYID : n.kind = NK_TYID; break;
+							default      : n.kind = NK_OP  ; break;
+						}
+						cmp->ntabs[file].nodes[ix] = n;
+					}
+					ix++;
+				}
+				
+				
+				if(!i){
+					assert(cmp->ntabs[file].dfill >= 0);
+					cmp->ntabs[file].defs[cmp->ntabs[file].dfill] = pos;
+					cmp->ntabs[file].dfill++;
+				}
+			}
+		}
+	}
+	
+	printf("========FILE %03x========\n", file);
+	for(int i = 0; i < rct; i++)
+		printf("R%03i : H%04i T%04i > P%04i D%02i\n", i, rs[i].head, rs[i].tail, rs[i].parent, rs[i].depth);
+	
+	printNodeProgram(&cmp->ntabs[file]);
+	
+	free(heads);
 	return 1;
 }
-
-
 
 
 
