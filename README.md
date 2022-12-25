@@ -15,3 +15,10 @@ Some builtin notions:
 * natural number mapping
 * peano acceleration
 * definition/axiom equivalence checking, definition casting
+
+
+Some other features planned:
+* visualizations
+* interactive constructors (draw knots, shapes, etc.)
+* automated proof search
+* interactive proof mode
