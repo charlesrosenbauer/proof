@@ -16,7 +16,7 @@ int newNode(NodeTable* ntab){
 
 
 int	parseNode(TokenList* tkl, NodeTable* ntab, SymbolTable* syms){
-	Range*     rs = malloc(sizeof(Range) * td->tkct);
+	Range*     rs = malloc(sizeof(Range) * tkl->tkct);
 	int       rct = 0;
 	
 	int maxdp = 0;

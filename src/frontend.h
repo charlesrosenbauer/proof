@@ -5,25 +5,28 @@
 #include "stdint.h"
 
 typedef enum{
-	TK_NIL,
+	TK_NIL     = 0,
 	
-	TK_OPN_PAR,
-	TK_OPN_BRK,
-	TK_OPN_BRC,
-	TK_END_PAR,
-	TK_END_BRK,
-	TK_END_BRC,
+	TK_BTM_WRP = 1,
+	TK_OPN_PAR = 2,
+	TK_OPN_BRK = 3,
+	TK_OPN_BRC = 4,
+	TK_MID_WRP = 5,
+	TK_END_PAR = 6,
+	TK_END_BRK = 7,
+	TK_END_BRC = 8,
+	TK_TOP_WRP = 9,
 
-	TK_TYID,
-	TK_ID,
-	TK_NUM,
-	TK_COM,
+	TK_TYID    = 10,
+	TK_ID      = 11,
+	TK_NUM     = 12,
+	TK_COM     = 13,
 	
-	TK_QMK,
-	TK_COLON,
-	TK_SEMI,
-	TK_PERIOD,
-	TK_COMMA
+	TK_QMK     = 14,
+	TK_COLON   = 15,
+	TK_SEMI    = 16,
+	TK_PERIOD  = 17,
+	TK_COMMA   = 18
 }TkType;
 
 typedef struct{
