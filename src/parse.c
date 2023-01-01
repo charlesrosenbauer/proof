@@ -158,16 +158,26 @@ void printNode(NodeTable* p, int i){
 	printf("%03x @ ", n.tkix);
 	switch(n.kind){
 		case NK_NDF  : printf("%03x| ???  %03x   (%03x)\n" , i, n.n, n.tkix); break;
+		
+		case NK_PNIL : printf("%03x| ( )  %03x   (%03x)\n" , i, n.n, n.tkix); break;
+		case NK_KNIL : printf("%03x| [ ]  %03x   (%03x)\n" , i, n.n, n.tkix); break;
+		case NK_CNIL : printf("%03x| { }  %03x   (%03x)\n" , i, n.n, n.tkix); break;
+		
 		case NK_PAR  : printf("%03x| PAR  %03x   (%03x)\n" , i, n.n, n.tkix); break;
 		case NK_BRK  : printf("%03x| BRK  %03x   (%03x)\n" , i, n.n, n.tkix); break;
 		case NK_BRC  : printf("%03x| BRC  %03x   (%03x)\n" , i, n.n, n.tkix); break;
-		case NK_COM  : printf("%03x| COM  %03x   (%03x)\n" , i, n.n, n.tkix); break;
 		case NK_NUM  : printf("%03x| NUM  %03lx   (%03x)\n", i, n.u, n.tkix); break;
 		case NK_ID   : printf("%03x| ID   %03lx   (%03x)\n", i, n.u, n.tkix); break;
 		case NK_TYP  : printf("%03x| TYP  %03lx   (%03x)\n", i, n.u, n.tkix); break;
 		case NK_XPAR : printf("%03x| PAR. %03x   (%03x)\n" , i, n.n, n.tkix); break;
 		case NK_XBRK : printf("%03x| BRK. %03x   (%03x)\n" , i, n.n, n.tkix); break;
 		case NK_XBRC : printf("%03x| BRC. %03x   (%03x)\n" , i, n.n, n.tkix); break;
+		
+		case NK_QMK  : printf("%03x|  ?   %03x   (%03x)\n" , i, n.n, n.tkix); break;
+		case NK_CLN  : printf("%03x|  :   %03x   (%03x)\n" , i, n.n, n.tkix); break;
+		case NK_SEM  : printf("%03x|  ;   %03x   (%03x)\n" , i, n.n, n.tkix); break;
+		case NK_PER  : printf("%03x|  .   %03x   (%03x)\n" , i, n.n, n.tkix); break;
+		case NK_COM  : printf("%03x|  ,   %03x   (%03x)\n" , i, n.n, n.tkix); break;
 	}
 }
 
