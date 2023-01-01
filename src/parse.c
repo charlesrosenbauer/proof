@@ -7,6 +7,20 @@
 #include "frontend.h"
 
 
+NodeTable	makeNodeTable(int nodes, int defs){
+	NodeTable ret;
+	ret.nodes		= malloc(sizeof(Node    ) * nodes);
+	ret.defs		= malloc(sizeof(uint32_t) * defs );
+	for(int i = 0; i < nodes; i++) ret.nodes[i] = (Node){.kind=0, .n=0, .tkix=0};
+	ret.nsize		= nodes;
+	ret.nfill		= 1;	// 0 is NULL
+	ret.dsize		= defs;
+	ret.dfill		= 0;
+	
+	return ret;
+}
+
+
 int newNode(NodeTable* ntab){
 	ntab->nfill++;
 	return ntab->nfill-1;
@@ -29,7 +43,6 @@ int	parseNode(TokenList* tkl, NodeTable* ntab, SymbolTable* syms){
 				// start new subrange
 				depth++;
 				maxdp = (maxdp < depth)? depth : maxdp;
-				assert(rct >= 0);
 				rs[rct]   = (Range){
 					.head   = i,
 					.tail   = 0,
@@ -46,7 +59,6 @@ int	parseNode(TokenList* tkl, NodeTable* ntab, SymbolTable* syms){
 			}else if(type <= TK_TOP_WRP){
 				// end subrange, switch head to previous
 				if(head >= 0){
-					assert(head >= 0);
 					rs[head].tail = i;
 					head = rs[head].parent;
 					depth--;
@@ -57,7 +69,6 @@ int	parseNode(TokenList* tkl, NodeTable* ntab, SymbolTable* syms){
 				}
 			}
 		}else if(head >= 0){
-			assert(head >= 0);
 			rs[head].size++;
 		}
 	}
@@ -72,10 +83,9 @@ int	parseNode(TokenList* tkl, NodeTable* ntab, SymbolTable* syms){
 		if(heads >= 0) heads[rs[i].head] = i;
 	}
 	
-	ntab->nodes  = malloc(sizeof(Node) * tkl->tkct * 2);
-	ntab->nsize  = tkl->tkct;
-	ntab->nfill  = 0;
-	ntab->ranges = rs;
+	*ntab 			= makeNodeTable(size * 2, defs);
+	ntab->ranges 	= rs;
+	ntab->rct    	= rct;
 	
 	for(int i = maxdp; i >= 0; i--){
 		for(int j = 0; j < rct; j++){
@@ -83,31 +93,46 @@ int	parseNode(TokenList* tkl, NodeTable* ntab, SymbolTable* syms){
 				int pos = ntab->nfill;
 				ntab->nfill += rs[j].size;
 				
-				int ix = ntab->nfill;
-				for(int k = rs[j].head; k < rs[j].tail; k++){
-					assert(ix >= 0);
-					assert(k  >= 0);
+				rs[j].root = pos;
+				
+				int ix  = pos;
+				for(int k = rs[j].head+1; k <= rs[j].tail; k++){
 					ntab->nodes[ix] = (Node){.t=tkl->tks[k].kind};
 					if((heads[k] >= 0) && (heads[k] != rs[j].head)){
 						Node n;
+						n.tkix = k;
 						switch(tkl->tks[k].kind){
 							case TK_OPN_PAR : { n.n = heads[k]; n.kind = NK_PAR; } break;
 							case TK_OPN_BRK : { n.n = heads[k]; n.kind = NK_BRK; } break;
 							case TK_OPN_BRC : { n.n = heads[k]; n.kind = NK_BRC; } break;
 							default : { printf("BAD CASE %i\n", tkl->tks[k].kind); exit(-1); } break;
 						}
-						assert(heads[k] >= 0);
 						k = rs[heads[k]].tail;
-						assert(ix >= 0);
 						ntab->nodes[ix] = n;
-					}else{
-						assert(ix >= 0);
+					}else if(heads[k] < 0){
 						Node n = ntab->nodes[ix];
+						n.tkix = k;
 						switch(tkl->tks[k].kind){
-							case TK_NUM : n.kind = NK_NUM; break;
-							case TK_ID  : n.kind = NK_ID ; break;
-							case TK_TYID: n.kind = NK_TYP; break;
-							default     : n.kind = NK_COM; break;	// Bad solution for now
+							case TK_NUM     : n.kind = NK_NUM ; break;
+							case TK_COM     : n.kind = NK_COM ; break;
+							case TK_ID      : {
+								//n.n    = tokenSymbol(cmp, file, k);
+								n.kind = NK_ID;
+							}break;
+							case TK_TYID    : {
+								//n.n    = tokenSymbol(cmp, file, k);
+								n.kind = NK_TYP;
+							}break;
+							case TK_END_PAR : n.kind = NK_XPAR; break;
+							case TK_END_BRK : n.kind = NK_XBRK; break;
+							case TK_END_BRC : n.kind = NK_XBRC; break;
+							
+							case TK_QMK		: n.kind = NK_QMK ; break;
+							case TK_COLON	: n.kind = NK_CLN ; break;
+							case TK_SEMI	: n.kind = NK_SEM ; break;
+							case TK_PERIOD	: n.kind = NK_PER ; break;
+							
+							default			: n.kind = NK_NDF ; break;
 						}
 						ntab->nodes[ix] = n;
 					}
@@ -116,58 +141,63 @@ int	parseNode(TokenList* tkl, NodeTable* ntab, SymbolTable* syms){
 				
 				
 				if(!i){
-					assert(ntab->dfill >= 0);
-					ntab->defs[ntab->dfill] = pos;
+					ntab->defs[ntab->dfill] = j;
 					ntab->dfill++;
 				}
 			}
 		}
 	}
 	
-	for(int i = 0; i < rct; i++)
-		printf("R%03i : H%04i T%04i > P%04i D%02i\n", i, rs[i].head, rs[i].tail, rs[i].parent, rs[i].depth);
-	
 	free(heads);
 	return 1;
 }
 
-
-
-void printNodeTable(NodeTable* ntab){
-	/*
-	printf("====NTAB [%i]====\n", ntab->fill);
-	for(int i = 0; i < ntab->fill; i++){
-		Node n = ntab->nodes[i];
-		switch(n.kind){
-			case NK_NDF		: printf("%03x | ???  %03x %016lx\n", i, n.next, n.sym); break;
+/*
+int	matchPattern(Compiler* cmp, FileId file, Range r, AtomKind* aks, TkType* tks, int tkct){
+	NodeProgram* p = &cmp->ntabs[file];
+	if(p == NULL) return 0;
 	
-			case NK_PNIL	: printf("%03x | ()   %03x\n", i, n.next); break;
-			case NK_CNIL	: printf("%03x | []   %03x\n", i, n.next); break;
-			case NK_KNIL	: printf("%03x | {}   %03x\n", i, n.next); break;
-	
-			case NK_PAR		: printf("%03x | (    %03x %03x\n", i, n.sub, n.next); break;
-			case NK_BRK		: printf("%03x | [    %03x %03x\n", i, n.sub, n.next); break;
-			case NK_BRC		: printf("%03x | {    %03x %03x\n", i, n.sub, n.next); break;
-	
-			case NK_ID		: printf("%03x | ID   %016lx %03x\n", i, n.sym, n.next); break;
-			case NK_TYP		: printf("%03x | TY   %016lx %03x\n", i, n.sym, n.next); break;
-			case NK_NUM		: printf("%03x | NUM  %016lx %03x\n", i, n.sym, n.next); break;
-			case NK_QMK		: printf("%03x | ?    %03x\n", i, n.next); break;
-			case NK_CLN		: printf("%03x | :    %03x\n", i, n.next); break;
-			case NK_SEM		: printf("%03x | ;    %03x\n", i, n.next); break;
-			case NK_PER		: printf("%03x | .    %03x\n", i, n.next); break;
-			case NK_COM		: printf("%03x | ,    %03x\n", i, n.next); break;
-	
-			case NK_K_THR	: printf("%03x | thr  %03x\n", i, n.next); break;
-			case NK_K_DEF	: printf("%03x | def  %03x\n", i, n.next); break;
-			case NK_K_AXM	: printf("%03x | axm  %03x\n", i, n.next); break;
-			case NK_K_ALL	: printf("%03x | all  %03x\n", i, n.next); break;
-			case NK_K_EXS	: printf("%03x | exs  %03x\n", i, n.next); break;
-			case NK_K_FNC	: printf("%03x | fnc  %03x\n", i, n.next); break;
+	//	ID ID ()
+	//	a  b  ()	#T
+	for(int i = 0; (i < r.size) && (i < tkct); i++){
+		if( (p->nodes[i+r.root].kind != aks[i])
+		|| ((p->nodes[i+r.root].t    != tks[i]) && (aks[i] == AK_OP))){
+			return 0;
 		}
 	}
-	printf("====COMS [%i]====\n", ntab->cmct);
-	for(int i = 0; i < ntab->cmct; i++)
-		printf("@%03x %03x\n", ntab->cmixs[i], ntab->comms[i]);*/
+	return 1;
 }
 
+
+int	splitOnToken(Compiler* cmp, FileId file, Range r, AtomKind ak, TkType tk, int* ixs){
+	NodeProgram* p = &cmp->ntabs[file];
+	if(p == NULL) return 0;
+	
+	//	[f: a, b, c]
+	//	:  [f] [a, b, c]
+	//	,  [f] [[a] [b] [c]]
+	int splits = 0;
+	for(int i  = 0; i < r.size; i++){
+		if( (p->nodes[i+r.root].kind == ak)
+		&& ((p->nodes[i+r.root].t    == tk) || (ak != AK_OP))){
+			ixs[splits] = i;
+			splits++;
+		}
+	}
+	return splits;
+}
+
+
+int containsToken(Compiler* cmp, FileId file, Range r, AtomKind ak, TkType tk){
+	NodeProgram* p = &cmp->ntabs[file];
+	if(p == NULL) return 0;
+	
+	//	[f: a, b, c]
+	//	:  #T
+	for(int i = 0; i < r.size; i++)
+		if( (p->nodes[i+r.root].kind == ak)
+		&& ((p->nodes[i+r.root].t    == tk) || (ak != AK_OP)))
+			return 1;
+	
+	return 0;
+}*/

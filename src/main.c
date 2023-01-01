@@ -34,11 +34,11 @@ int main(int ac, char** av){
 		printTokenList(&tkls[i]);
 		tkls[i].tkct--;
 		
-		if(!nodeParser(&tkls[i], &ntbs[i], &syms)){
+		if(!parseNode(&tkls[i], &ntbs[i], &syms)){
 			printf("Node parser failed!\n");
 			return 0;
 		}
-		printNodeTable(&ntbs[i]);
+		//printNodeTable(&ntbs[i]);
 	}
 	
 	

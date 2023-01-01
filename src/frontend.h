@@ -94,7 +94,11 @@ typedef enum{
 	NK_K_AXM	= 17,
 	NK_K_ALL	= 18,
 	NK_K_EXS	= 19,
-	NK_K_FNC	= 20
+	NK_K_FNC	= 20,
+	
+	NK_XPAR		= 21,
+	NK_XBRK		= 22,
+	NK_XBRC		= 23
 }NodeKind;
 
 typedef struct{
@@ -109,12 +113,15 @@ typedef struct{
 }Node;
 
 typedef struct{
-	int head, tail, size;
-	int parent, depth;
+	int head, tail;			// range in token list
+	int root, size;			// range in node  list
+	int parent, depth;		// position in tree
 }Range;
 
 typedef struct{
 	Range*			ranges;
+	int				rct;
+	
 	Node*			nodes;
 	int				nsize, nfill;
 	
@@ -122,7 +129,7 @@ typedef struct{
 	int 			dsize, dfill;
 }NodeTable;
 
-int 	nodeParser		(TokenList*, NodeTable*, SymbolTable*);
+int		parseNode		(TokenList*, NodeTable*, SymbolTable*);
 void	printNodeTable	(NodeTable*);
 
 #endif
