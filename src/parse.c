@@ -152,6 +152,45 @@ int	parseNode(TokenList* tkl, NodeTable* ntab, SymbolTable* syms){
 	return 1;
 }
 
+
+void printNode(NodeTable* p, int i){
+	Node n = p->nodes[i];
+	printf("%03x @ ", n.tkix);
+	switch(n.kind){
+		case NK_NDF  : printf("%03x| ???  %03x   (%03x)\n" , i, n.n, n.tkix); break;
+		case NK_PAR  : printf("%03x| PAR  %03x   (%03x)\n" , i, n.n, n.tkix); break;
+		case NK_BRK  : printf("%03x| BRK  %03x   (%03x)\n" , i, n.n, n.tkix); break;
+		case NK_BRC  : printf("%03x| BRC  %03x   (%03x)\n" , i, n.n, n.tkix); break;
+		case NK_COM  : printf("%03x| COM  %03x   (%03x)\n" , i, n.n, n.tkix); break;
+		case NK_NUM  : printf("%03x| NUM  %03lx   (%03x)\n", i, n.u, n.tkix); break;
+		case NK_ID   : printf("%03x| ID   %03lx   (%03x)\n", i, n.u, n.tkix); break;
+		case NK_TYP  : printf("%03x| TYP  %03lx   (%03x)\n", i, n.u, n.tkix); break;
+		case NK_XPAR : printf("%03x| PAR. %03x   (%03x)\n" , i, n.n, n.tkix); break;
+		case NK_XBRK : printf("%03x| BRK. %03x   (%03x)\n" , i, n.n, n.tkix); break;
+		case NK_XBRC : printf("%03x| BRC. %03x   (%03x)\n" , i, n.n, n.tkix); break;
+	}
+}
+
+
+void printNodeTable(NodeTable* p){
+	for(int i = 1; i < p->nfill; i++)
+		printNode(p, i);
+	
+	for(int i = 0; i < p->dfill; i++){
+		printf("DEF %i : %i\n", i, p->defs[i]);
+	}
+}
+
+
+void printRanges(NodeTable* p){
+	for(int i = 0; i < p->rct; i++){
+		Range r = p->ranges[i];
+		printf("R%05x | H%05i T%05i | R%05i S%05i | P%05x D%02x\n", i, r.head, r.tail, r.root, r.size, r.parent, r.depth);
+		for(int j = 0; j < r.size; j++) printNode(p, r.root+j);
+	}
+}
+
+
 /*
 int	matchPattern(Compiler* cmp, FileId file, Range r, AtomKind* aks, TkType* tks, int tkct){
 	NodeProgram* p = &cmp->ntabs[file];

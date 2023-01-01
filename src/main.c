@@ -38,7 +38,7 @@ int main(int ac, char** av){
 			printf("Node parser failed!\n");
 			return 0;
 		}
-		//printNodeTable(&ntbs[i]);
+		printNodeTable(&ntbs[i]);
 	}
 	
 	
