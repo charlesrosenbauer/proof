@@ -201,34 +201,33 @@ void printRanges(NodeTable* p){
 }
 
 
-/*
-int	matchPattern(Compiler* cmp, FileId file, Range r, AtomKind* aks, TkType* tks, int tkct){
-	NodeProgram* p = &cmp->ntabs[file];
-	if(p == NULL) return 0;
+int	matchPattern(NodeTable* p, Range r, NodeKind* nks, int nkct){
 	
-	//	ID ID ()
-	//	a  b  ()	#T
-	for(int i = 0; (i < r.size) && (i < tkct); i++){
-		if( (p->nodes[i+r.root].kind != aks[i])
-		|| ((p->nodes[i+r.root].t    != tks[i]) && (aks[i] == AK_OP))){
-			return 0;
+	/*
+		ID ID ()
+		a  b  ()	#T
+	*/
+	for(int i = 0; (i < r.size) && (i < nkct); i++){
+		if(nks[i] != NK_NDF){
+			if(p->nodes[i+r.root].kind != nks[i]){
+				return 0;
+			}
 		}
 	}
 	return 1;
 }
 
 
-int	splitOnToken(Compiler* cmp, FileId file, Range r, AtomKind ak, TkType tk, int* ixs){
-	NodeProgram* p = &cmp->ntabs[file];
-	if(p == NULL) return 0;
+int	splitOnSymbol(NodeTable* p, Range r, NodeKind nk, int* ixs){
 	
-	//	[f: a, b, c]
-	//	:  [f] [a, b, c]
-	//	,  [f] [[a] [b] [c]]
+	/*
+		[f: a, b, c]
+		:  [f] [a, b, c]
+		,  [f] [[a] [b] [c]]
+	*/
 	int splits = 0;
 	for(int i  = 0; i < r.size; i++){
-		if( (p->nodes[i+r.root].kind == ak)
-		&& ((p->nodes[i+r.root].t    == tk) || (ak != AK_OP))){
+		if(p->nodes[i+r.root].kind == nk){
 			ixs[splits] = i;
 			splits++;
 		}
@@ -237,16 +236,39 @@ int	splitOnToken(Compiler* cmp, FileId file, Range r, AtomKind ak, TkType tk, in
 }
 
 
-int containsToken(Compiler* cmp, FileId file, Range r, AtomKind ak, TkType tk){
-	NodeProgram* p = &cmp->ntabs[file];
-	if(p == NULL) return 0;
+int containsToken(NodeTable* p, Range r, NodeKind nk){
 	
-	//	[f: a, b, c]
-	//	:  #T
+	/*
+		[f: a, b, c]
+		:  #T
+	*/
 	for(int i = 0; i < r.size; i++)
-		if( (p->nodes[i+r.root].kind == ak)
-		&& ((p->nodes[i+r.root].t    == tk) || (ak != AK_OP)))
+		if(p->nodes[i+r.root].kind == nk)
 			return 1;
 	
 	return 0;
-}*/
+}
+
+
+int setToken(NodeTable* p, Range r, NodeKind* nks, int ct){
+	
+	uint64_t set = 0;
+	for(int i = 0; i < ct; i++) set |= (1l << (nks[i] % 64));
+	
+	for(int i = 0; i < r.size; i++){
+		int k = p->nodes[i+r.root].kind;
+		if(set & (1l << (k%64))){
+			int pass = 0;
+			for(int j = 0; j < ct; j++){
+				if(p->nodes[i+r.root].kind == nks[j]){
+					pass = 1;
+					j = ct;
+				}
+			}
+			if(!pass) return 0;
+		}else{
+			return 0;
+		}
+	}
+	return 1;
+}
