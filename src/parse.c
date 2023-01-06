@@ -272,3 +272,66 @@ int setToken(NodeTable* p, Range r, NodeKind* nks, int ct){
 	}
 	return 1;
 }
+
+
+
+
+
+
+int parseDefine(NodeTable* p, int defid){
+	// {def TYP DX DX DX AX AX AX }
+	
+	return 0;
+}
+
+int parseTheorem(NodeTable* p, int defid){
+	// {thm ID (TMS) -> (TMS) : XP }
+
+	return 0;
+}
+
+int parseValue(NodeTable* p, int defid){
+	// {val ID XP }
+
+	return 0;
+}
+
+
+
+int parseDef(NodeTable* p, int defid){
+	
+	int tryDef = parseDefine (p, defid);
+	if(tryDef){
+		if(tryDef < 0) return -1;	// bad
+		// good
+		return tryDef;
+	}
+	
+	
+	
+	int tryThm = parseTheorem(p, defid);
+	if(tryThm){
+		if(tryThm < 0) return -1;	// bad
+		// good
+		return tryThm;
+	}
+	
+	
+	
+	int tryVal = parseValue(p, defid);
+	if(tryVal){
+		if(tryVal < 0) return -1;	// bad
+		// good
+		return tryVal;
+	}
+	
+	
+
+	// Nothing worked
+	return -1;
+}
+
+
+
+
+
