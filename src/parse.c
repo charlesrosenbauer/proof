@@ -336,7 +336,7 @@ int parseLog(NodeTable* p, int range){
 	x = parseLogOr    (p, range);
 	if(x) return x;
 	
-	x = parseLogImpl  (p, range);
+	x = parseLogImp   (p, range);
 	if(x) return x;
 	
 	x = parseLogEql   (p, range);

@@ -13,22 +13,22 @@ typedef enum{
 	BK_TERM		= 0x001,
 	BK_TYPE		= 0x002,
 	BK_NUM		= 0x003,
-	BK_PAR		= 0x004,
-	BK_LIST		= 0x005,
-	BK_TPRD		= 0x006,
-	BK_TSUM		= 0x007,
-	BK_TFUN		= 0x008,
-	BK_BIND		= 0x009,
-	BK_REC		= 0x00A,
+	BK_TPRD		= 0x004,
+	BK_TSUM		= 0x005,
+	BK_TFUN		= 0x006,
+	BK_REC		= 0x007,
 
-	// Statements
+	// Logic
 	BK_FORALL	= 0x100,
 	BK_EXISTS	= 0x101,
 	BK_AND		= 0x102,
 	BK_OR		= 0x103,
 	BK_NOT		= 0x104,
-	BK_FUNC		= 0x105,
-	BK_APPLY	= 0x106,
+	BK_IMPLIES	= 0x105,
+	BK_IFF		= 0x106,
+	BK_EQUALS	= 0x107,
+	BK_T		= 0x108,
+	BK_F		= 0x109,
 	
 	// Proof combinators
 	BK_MATCH	= 0x200,
