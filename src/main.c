@@ -31,14 +31,19 @@ int main(int ac, char** av){
 		lexer(&tkls[i]);
 		printf("%i tokens\n", tkls[i].tkct);
 		
-		printTokenList(&tkls[i]);
+		//printTokenList(&tkls[i]);
 		tkls[i].tkct--;
 		
 		if(!parseNode(&tkls[i], &ntbs[i], &syms)){
 			printf("Node parser failed!\n");
 			return 0;
 		}
-		printNodeTable(&ntbs[i]);
+		//printNodeTable(&ntbs[i]);
+		
+		for(int j = 0; j < ntbs[i].dfill; j++){
+			int d = parseDef(&ntbs[i], j);
+			if(d < 0) printf("Bad definition #%i in file #%i\n", j, i);
+		}
 	}
 	
 	

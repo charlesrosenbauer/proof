@@ -132,4 +132,7 @@ typedef struct{
 int		parseNode		(TokenList*, NodeTable*, SymbolTable*);
 void	printNodeTable	(NodeTable*);
 
+int		parseDef		(NodeTable*, int);
+
+
 #endif

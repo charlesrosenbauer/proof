@@ -359,6 +359,17 @@ int parseLog(NodeTable* p, int range){
 int parseDefine(NodeTable* p, int defid){
 	// {def TYP DX DX DX AX AX AX }
 	
+	Range r = p->ranges[p->defs[defid]];
+	NodeKind header[2] = {NK_ID , NK_TYP};
+	if(matchPattern(p, r, header, 2)){
+		printf("DEF\n");
+		return 1;
+	}else{
+		return 0;
+	}
+	
+	//int tokenLen(TokenList* tkl, int ix)
+	
 	return 0;
 }
 
