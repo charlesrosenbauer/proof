@@ -34,14 +34,17 @@ int main(int ac, char** av){
 		//printTokenList(&tkls[i]);
 		tkls[i].tkct--;
 		
-		if(!parseNode(&tkls[i], &ntbs[i], &syms)){
+		FrontendFile file = (FrontendFile){.ntab=&ntbs[i], .tkl=&tkls[i], .syms=&syms};
+		if(!parseNode(file)){
 			printf("Node parser failed!\n");
 			return 0;
 		}
 		//printNodeTable(&ntbs[i]);
 		
+		
+		
 		for(int j = 0; j < ntbs[i].dfill; j++){
-			int d = parseDef(&ntbs[i], j);
+			int d = parseDef(file, j);
 			if(d < 0) printf("Bad definition #%i in file #%i\n", j, i);
 		}
 	}

@@ -129,10 +129,16 @@ typedef struct{
 	int 			dsize, dfill;
 }NodeTable;
 
-int		parseNode		(TokenList*, NodeTable*, SymbolTable*);
+typedef struct{
+	NodeTable*		ntab;
+	TokenList*		tkl;
+	SymbolTable*	syms;
+}FrontendFile;
+
+int		parseNode		(FrontendFile);
 void	printNodeTable	(NodeTable*);
 
-int		parseDef		(NodeTable*, int);
+int		parseDef		(FrontendFile, int);
 
 
 #endif

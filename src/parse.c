@@ -29,7 +29,11 @@ int newNode(NodeTable* ntab){
 
 
 
-int	parseNode(TokenList* tkl, NodeTable* ntab, SymbolTable* syms){
+int	parseNode(FrontendFile file){
+	TokenList* 	  tkl = file.tkl;
+	NodeTable*	 ntab = file.ntab;
+	SymbolTable* syms = file.syms;
+
 	Range*     rs = malloc(sizeof(Range) * tkl->tkct);
 	int       rct = 0;
 	
@@ -274,6 +278,18 @@ int setToken(NodeTable* p, Range r, NodeKind* nks, int ct){
 }
 
 
+int checkKeyword(FrontendFile file, int node, char* keyword, int len){
+	TokenList* 	  tkl = file.tkl;
+	NodeTable*	 ntab = file.ntab;
+
+	int tkix = ntab->nodes[node].tkix;
+	int tlen = tokenLen(tkl, tkix);
+	int tpos = tkl->tks[tkix].pos;
+	
+	return strncmp(&tkl->text[tpos], keyword, len);
+}
+
+
 
 
 int parseLogForall(NodeTable* p, int range){
@@ -355,41 +371,69 @@ int parseLog(NodeTable* p, int range){
 }
 
 
-
-int parseDefine(NodeTable* p, int defid){
-	// {def TYP DX DX DX AX AX AX }
+// TODO : make function for checking keywords
+int parseDefine(FrontendFile file, int defid){
+	TokenList* 	  tkl = file.tkl;
+	NodeTable*	 ntab = file.ntab;
+	SymbolTable* syms = file.syms;
 	
-	Range r = p->ranges[p->defs[defid]];
+	// { def TYP DX DX DX AX AX AX }
+	
+	Range r = ntab->ranges[ntab->defs[defid]];
 	NodeKind header[2] = {NK_ID , NK_TYP};
-	if(matchPattern(p, r, header, 2)){
+	if(matchPattern(ntab, r, header, 2)){
 		printf("DEF\n");
-		return 1;
+		return !checkKeyword(file, r.root, "def", 3);
 	}else{
 		return 0;
 	}
 	
-	//int tokenLen(TokenList* tkl, int ix)
+	return 0;
+}
+
+int parseTheorem(FrontendFile file, int defid){
+	TokenList* 	  tkl = file.tkl;
+	NodeTable*	 ntab = file.ntab;
+	SymbolTable* syms = file.syms;
+
+	// { thm ID (TMS) -> (TMS) : XP }
 	
-	return 0;
-}
-
-int parseTheorem(NodeTable* p, int defid){
-	// {thm ID (TMS) -> (TMS) : XP }
-
-	return 0;
-}
-
-int parseValue(NodeTable* p, int defid){
-	// {val ID XP }
+	Range r = ntab->ranges[ntab->defs[defid]];
+	NodeKind header[2] = {NK_ID , NK_TYP};
+	if(matchPattern(ntab, r, header, 2)){
+		printf("THEOREM\n");
+		return !checkKeyword(file, r.root, "theorem", 7);
+	}else{
+		return 0;
+	}
 
 	return 0;
 }
 
+int parseValue(FrontendFile file, int defid){
+	TokenList* 	  tkl = file.tkl;
+	NodeTable*	 ntab = file.ntab;
+	SymbolTable* syms = file.syms;
 
-
-int parseDef(NodeTable* p, int defid){
+	// { val ID XP }
 	
-	int tryDef = parseDefine (p, defid);
+	Range r = ntab->ranges[ntab->defs[defid]];
+	NodeKind header[2] = {NK_ID , NK_TYP};
+	if(matchPattern(ntab, r, header, 2)){
+		printf("VAL\n");
+		return !checkKeyword(file, r.root, "val", 3);
+	}else{
+		return 0;
+	}
+
+	return 0;
+}
+
+
+
+int parseDef(FrontendFile file, int defid){
+	
+	int tryDef = parseDefine (file, defid);
 	if(tryDef){
 		if(tryDef < 0) return -1;	// bad
 		// good
@@ -398,7 +442,7 @@ int parseDef(NodeTable* p, int defid){
 	
 	
 	
-	int tryThm = parseTheorem(p, defid);
+	int tryThm = parseTheorem(file, defid);
 	if(tryThm){
 		if(tryThm < 0) return -1;	// bad
 		// good
@@ -407,7 +451,7 @@ int parseDef(NodeTable* p, int defid){
 	
 	
 	
-	int tryVal = parseValue(p, defid);
+	int tryVal = parseValue(file, defid);
 	if(tryVal){
 		if(tryVal < 0) return -1;	// bad
 		// good
