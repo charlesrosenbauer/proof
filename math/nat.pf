@@ -1,0 +1,17 @@
+
+
+;; NAT
+{def Nat
+	(tsum
+	| Succ Nat
+	| Zero	
+)}
+
+
+;; ADDITION
+{val plus
+	((n m Nat) -> Nat :
+		(match n
+		| Zero   => m
+		| Succ x => (Succ (plus x m))
+))}

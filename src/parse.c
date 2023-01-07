@@ -399,7 +399,7 @@ int parseTheorem(FrontendFile file, int defid){
 	// { thm ID (TMS) -> (TMS) : XP }
 	
 	Range r = ntab->ranges[ntab->defs[defid]];
-	NodeKind header[2] = {NK_ID , NK_TYP};
+	NodeKind header[2] = {NK_ID , NK_ID};
 	if(matchPattern(ntab, r, header, 2)){
 		printf("THEOREM\n");
 		return !checkKeyword(file, r.root, "theorem", 7);
@@ -418,7 +418,7 @@ int parseValue(FrontendFile file, int defid){
 	// { val ID XP }
 	
 	Range r = ntab->ranges[ntab->defs[defid]];
-	NodeKind header[2] = {NK_ID , NK_TYP};
+	NodeKind header[2] = {NK_ID , NK_ID};
 	if(matchPattern(ntab, r, header, 2)){
 		printf("VAL\n");
 		return !checkKeyword(file, r.root, "val", 3);
