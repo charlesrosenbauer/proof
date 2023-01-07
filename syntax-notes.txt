@@ -1,0 +1,45 @@
+==== Proof Syntax Notes ====
+
+
+Logic:
+* forall
+* exists
+* &
+* |
+* !
+* ->
+* <>
+* =
+
+
+Constructors:
+* bind
+* product
+* sum
+* induction
+* function
+
+
+Deconstructors:
+* split  (product)
+* match  (sum)
+* induct (induction)
+* apply  (function)
+* assume
+* contradict
+* conjecture
+
+
+
+Language features:
+* types
+  * term
+  * a -> b -> c		: function
+  * a &  b -> c		: statement
+  * types with bindings
+* logic
+* models
+* values
+* theorems
+* operations
+
