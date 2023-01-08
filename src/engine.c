@@ -5,7 +5,7 @@
 
 
 
-
+/*
 void printDefinition(Definition d){
 	for(int i = 1; i < d.fill; i++){
 		printf("#%03x | ", i);
@@ -74,10 +74,11 @@ void printTheorem(Theorem t){
 	printf("  proof [%i]:\n"  , t.pct);
 	for(int i = 0; i < t.pct; i++) printf("    %03x\n", t.proof[i]);
 }
-
+*/
 
 
 void printMathTable(MathTable mtab){
+	/*
 	printf("<<DEFINITIONS [%i]>>\n\n", mtab.dct);
 	for(int i = 0; i < mtab.dct; i++){
 		printf("====[D %03x : %i/%i]====\n", i, mtab.ds[i].fill, mtab.ds[i].size);
@@ -95,5 +96,5 @@ void printMathTable(MathTable mtab){
 	for(int i = 0; i < mtab.mct; i++){
 		printModel(mtab.ms[i]);
 		printf("\n");
-	}
+	}*/
 }

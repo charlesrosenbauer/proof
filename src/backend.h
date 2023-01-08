@@ -46,62 +46,17 @@ typedef struct{
 	BCKind		kind;
 }Bytecode;
 
-typedef struct{
-	Bytecode*	code;
-	int			fill, size;
-}Definition;
+
+
 
 
 typedef struct{
-	uint32_t	id;
-	uint32_t	def;
 	
-	/*
-		list of fields
-		list of operations
-		list of axioms
-	*/
-	uint32_t*	field;
-	uint32_t*	fldef;
-	
-	uint32_t*	op;
-	uint32_t*	opdef;
-	
-	uint32_t*	axiom;
-	uint32_t*	axdef;
-	
-	int			fct, oct, xct;
-}Model;
-
-typedef struct{
-	uint32_t	id;
-	uint32_t	def;
-	
-	/*
-		assumed statement
-		implied statement
-		list of expressions
-	*/
-	uint32_t	assumption;
-	uint32_t	implication;
-	uint32_t*	proof;
-	int			pct;
-}Theorem;
-
-typedef struct{
-	Definition*	ds;
-	int			dct, dcap;
-
-	Theorem*	ts;
-	int			tct, tcap;
-	
-	Model*		ms;
-	int			mct, mcap;
 }MathTable;
 
 
 
-void		printDefinition		(Definition);
+//void		printDefinition		(Definition);
 void		printMathTable		(MathTable);
 
 
