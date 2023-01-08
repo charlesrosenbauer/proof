@@ -140,5 +140,18 @@ void	printNodeTable	(NodeTable*);
 
 int		parseDef		(FrontendFile, int);
 
+int		matchPattern	(NodeTable*, Range, NodeKind*, int);
+int		splitOnSymbol	(NodeTable*, Range, NodeKind , int*);
+int 	containsToken	(NodeTable*, Range, NodeKind );
+int 	setToken		(NodeTable*, Range, NodeKind*, int);
+int 	checkKeyword	(FrontendFile, int, char*, int);
+
+
+
+int		parseValue		(FrontendFile, int);
+int 	parseTheorem	(FrontendFile, int);
+int 	parseDefine		(FrontendFile, int);
+
+
 
 #endif
