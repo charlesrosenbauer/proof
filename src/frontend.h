@@ -148,8 +148,6 @@ int 	checkKeyword	(FrontendFile, int, char*, int);
 
 
 
-int		parseValue		(FrontendFile, int);
-int 	parseTheorem	(FrontendFile, int);
 int 	parseDefine		(FrontendFile, int);
 
 

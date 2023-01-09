@@ -293,32 +293,6 @@ int checkKeyword(FrontendFile file, int node, char* keyword, int len){
 
 int parseDef(FrontendFile file, int defid){
 	
-	int tryDef = parseDefine (file, defid);
-	if(tryDef){
-		if(tryDef < 0) return -1;	// bad
-		// good
-		return tryDef;
-	}
-	
-	
-	
-	int tryThm = parseTheorem(file, defid);
-	if(tryThm){
-		if(tryThm < 0) return -1;	// bad
-		// good
-		return tryThm;
-	}
-	
-	
-	
-	int tryVal = parseValue(file, defid);
-	if(tryVal){
-		if(tryVal < 0) return -1;	// bad
-		// good
-		return tryVal;
-	}
-	
-	
 
 	// Nothing worked
 	return -1;

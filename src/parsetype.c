@@ -9,17 +9,17 @@
 
 
 int parseTypeSum (NodeTable* p, int range){
-	// Typ | Typ | Typ ...
+	// [ Typ | Typ | Typ ]
 	return 0;
 }
 
 int parseTypeProd(NodeTable* p, int range){
-	// Typ & Typ & Typ ...
+	// [ Typ , Typ , Typ ]
 	return 0;
 }
 
 int parseTypeFunc(NodeTable* p, int range){
-	// Typ -> Typ -> Typ ...
+	// Typ -> Typ
 	return 0;
 }
 
