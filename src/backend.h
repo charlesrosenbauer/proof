@@ -46,12 +46,48 @@ typedef struct{
 	BCKind		kind;
 }Bytecode;
 
+typedef uint32_t	BCId;
 
 
 
+
+/*
+	We're going to use the same categorization system as Coq for now, albeit
+	with explicit abstract variants. Eventually we might want to add more
+	categories, but these are the foundation for now.
+*/
+
+typedef enum{
+	DK_NIL		= 0,
+	DK_FNVAL	= 1,
+	DK_VAL		= 2,
+	DK_FNTYP	= 3,
+	DK_TYP		= 4,
+	DK_ABFNVAL	= 5,
+	DK_ABVAL	= 6,
+	DK_ABFNTYP	= 7,
+	DK_ABTYP	= 8
+}DefKind;
 
 typedef struct{
+	DefKind		kind;
+	uint32_t	name;
 	
+	Bytecode*	bcs;
+	int			fill, size;
+	
+	BCId		type;
+	BCId		bind, pars, rets;
+	int			bdct, prct, rtct;
+}Def;
+
+typedef struct{
+	Def*		defs;
+	int			dfct, dfcap;
+	
+	uint32_t*	modnames;
+	int*		modstarts;
+	int			modct;
 }MathTable;
 
 
