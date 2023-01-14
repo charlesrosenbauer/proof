@@ -10,12 +10,22 @@
 
 int parseLogForall(NodeTable* p, int range){
 	// [forall BIND : EXPR]
-	return 0;
+	NodeKind ks[5] = (NodeKind){ NK_ID, NK_WILD, NK_COLON, NK_WILD, NK_XBRK};
+	if(!matchPattern(p, p->ranges[range], ks, 5)) return 0;
+	
+	// TODO: assemble
+	
+	return 1;
 }
 
 int parseLogExists(NodeTable* p, int range){
 	// [exists BIND : EXPR]
-	return 0;
+	NodeKind ks[5] = (NodeKind){ NK_ID, NK_WILD, NK_COLON, NK_WILD, NK_XBRK};
+	if(!matchPattern(p, p->ranges[range], ks, 5)) return 0;
+	
+	// TODO: assemble
+	
+	return 1;
 }
 
 int parseLogAnd(NodeTable* p, int range){
