@@ -26,7 +26,13 @@ typedef enum{
 	TK_COLON   = 15,
 	TK_SEMI    = 16,
 	TK_PERIOD  = 17,
-	TK_COMMA   = 18
+	TK_COMMA   = 18,
+	TK_ARROW   = 19,
+	TK_CONJC   = 20,
+	TK_EQ      = 21,
+	TK_AND     = 22,
+	TK_OR      = 23,
+	TK_NOT     = 24
 }TkType;
 
 typedef struct{
@@ -88,17 +94,23 @@ typedef enum{
 	NK_SEM		= 12,
 	NK_PER		= 13,
 	NK_COM		= 14,
+	NK_ARR		= 15,
+	NK_CNJ		= 16,
+	NK_EQ		= 17,
+	NK_AND		= 18,
+	NK_OR		= 19,
+	NK_NOT		= 20,
 	
-	NK_K_THR	= 15,
-	NK_K_DEF	= 16,
-	NK_K_AXM	= 17,
-	NK_K_ALL	= 18,
-	NK_K_EXS	= 19,
-	NK_K_FNC	= 20,
+	NK_K_THR	= 30,
+	NK_K_DEF	= 31,
+	NK_K_AXM	= 32,
+	NK_K_ALL	= 33,
+	NK_K_EXS	= 34,
+	NK_K_FNC	= 35,
 	
-	NK_XPAR		= 21,
-	NK_XBRK		= 22,
-	NK_XBRC		= 23
+	NK_XPAR		= 50,
+	NK_XBRK		= 51,
+	NK_XBRC		= 52
 }NodeKind;
 
 typedef struct{

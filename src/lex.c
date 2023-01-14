@@ -69,6 +69,10 @@ int lexer(TokenList* tkl){
 			
 			case '?': {tkl->tks[tkix] = (Token){TK_QMK    , i}; tkl->poss[tkix] = (Position){ln, cl}; tkix++;}break;
 			case ':': {tkl->tks[tkix] = (Token){TK_COLON  , i}; tkl->poss[tkix] = (Position){ln, cl}; tkix++;}break;
+			case '=': {tkl->tks[tkix] = (Token){TK_EQ     , i}; tkl->poss[tkix] = (Position){ln, cl}; tkix++;}break;
+			case '&': {tkl->tks[tkix] = (Token){TK_AND    , i}; tkl->poss[tkix] = (Position){ln, cl}; tkix++;}break;
+			case '|': {tkl->tks[tkix] = (Token){TK_OR     , i}; tkl->poss[tkix] = (Position){ln, cl}; tkix++;}break;
+			case '!': {tkl->tks[tkix] = (Token){TK_NOT    , i}; tkl->poss[tkix] = (Position){ln, cl}; tkix++;}break;
 			case ';':{
 				if(x1 == ';'){
 					// ;; comment
@@ -94,7 +98,15 @@ int lexer(TokenList* tkl){
 			default: {
 				// ignore whitespace
 				if(x0 > ' '){
-					if((x0 >= 'A') && (x0 <= 'Z')){
+					if((x0 == '-') && (x1 == '>')){
+						tkl->tks [tkix] = (Token){TK_ARROW , i};
+						tkl->poss[tkix] = (Position){ln, cl};
+						tkix++;
+					}else if((x0 == '<') && (x1 == '>')){
+						tkl->tks [tkix] = (Token){TK_CONJC , i};
+						tkl->poss[tkix] = (Position){ln, cl};
+						tkix++;
+					}else if((x0 >= 'A') && (x0 <= 'Z')){
 						// tyid
 						tkl->tks [tkix] = (Token   ){TK_TYID   , i};
 						tkl->poss[tkix] = (Position){ln, cl};
@@ -197,6 +209,7 @@ void printTokenList(TokenList* tkl){
 			case TK_SEMI    : printf("SEMI   \n"); break;
 			case TK_PERIOD  : printf("PERIOD \n"); break;
 			case TK_COMMA   : printf("COMMA  \n"); break;
+			case TK_ARROW	: printf("ARROW  \n"); break;
 		}
 	}
 }

@@ -135,6 +135,12 @@ int	parseNode(FrontendFile file){
 							case TK_COLON	: n.kind = NK_CLN ; break;
 							case TK_SEMI	: n.kind = NK_SEM ; break;
 							case TK_PERIOD	: n.kind = NK_PER ; break;
+							case TK_ARROW	: n.kind = NK_ARR ; break;
+							case TK_CONJC	: n.kind = NK_CNJ ; break;
+							case TK_AND		: n.kind = NK_AND ; break;
+							case TK_OR		: n.kind = NK_OR  ; break;
+							case TK_NOT		: n.kind = NK_NOT ; break;
+							case TK_EQ		: n.kind = NK_EQ  ; break;
 							
 							default			: n.kind = NK_NDF ; break;
 						}
@@ -182,6 +188,12 @@ void printNode(NodeTable* p, int i){
 		case NK_SEM  : printf("%03x|  ;   %03x   (%03x)\n" , i, n.n, n.tkix); break;
 		case NK_PER  : printf("%03x|  .   %03x   (%03x)\n" , i, n.n, n.tkix); break;
 		case NK_COM  : printf("%03x|  ,   %03x   (%03x)\n" , i, n.n, n.tkix); break;
+		case NK_ARR  : printf("%03x|  ->  %03x   (%03x)\n" , i, n.n, n.tkix); break;
+		case NK_CNJ  : printf("%03x|  <>  %03x   (%03x)\n" , i, n.n, n.tkix); break;
+		case NK_EQ   : printf("%03x|  =   %03x   (%03x)\n" , i, n.n, n.tkix); break;
+		case NK_NOT  : printf("%03x|  !   %03x   (%03x)\n" , i, n.n, n.tkix); break;
+		case NK_AND  : printf("%03x|  &   %03x   (%03x)\n" , i, n.n, n.tkix); break;
+		case NK_OR   : printf("%03x|  |   %03x   (%03x)\n" , i, n.n, n.tkix); break;
 	}
 }
 
