@@ -39,9 +39,9 @@ int main(int ac, char** av){
 			printf("Node parser failed!\n");
 			return 0;
 		}
-		printf("\n====%i====\n", i);
-		printNodeTable(&ntbs[i]);
-		printRanges   (&ntbs[i]);
+		//printf("\n====%i====\n", i);
+		//printNodeTable(&ntbs[i]);
+		//printRanges   (&ntbs[i]);
 		
 		for(int j = 0; j < ntbs[i].dfill; j++){
 			int d = parseDef(file, j);

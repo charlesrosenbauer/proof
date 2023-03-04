@@ -46,8 +46,10 @@ int parseFunction(FrontendFile file, int defid){
 	Range r = ntab->ranges[ntab->defs[defid]];
 
 	// {fnc name (FNTY) ((FBIND) => EXPR) ... }
-	if(ntab->nodes[r.tail-1].kind != NK_XBRC) return 0;
-	
+	if(ntab->nodes[r.root         ].kind != NK_ID  ) return 0;
+	if(ntab->nodes[r.root+1       ].kind != NK_TYP ) return 0;
+	if(ntab->nodes[r.root+r.size-1].kind != NK_XBRC) return 0;
+	printf("Function %i\n", defid);
 	
 	return 1;
 }
