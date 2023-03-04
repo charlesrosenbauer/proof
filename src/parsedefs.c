@@ -46,8 +46,10 @@ int parseFunction(FrontendFile file, int defid){
 	Range r = ntab->ranges[ntab->defs[defid]];
 
 	// {fnc name (FNTY) ((FBIND) => EXPR) ... }
+	if(ntab->nodes[r.tail-1].kind != NK_XBRC) return 0;
 	
-	return 0;
+	
+	return 1;
 }
 
 
@@ -97,5 +99,23 @@ int parseFnTypedef(FrontendFile file, int defid){
 }
 
 
+int parseDef(FrontendFile file, int defid){
+	
+	int df = -1;
+	
+	df = parseFnTypedef (file, defid);
+	if(df) return df;
+	
+	df = parseTypedef   (file, defid);
+	if(df) return df;
+	
+	df = parseAbsTypedef(file, defid);
+	if(df) return df;
+	
+	df = parseFunction  (file, defid);
+	if(df) return df;
 
+	// Nothing worked
+	return -1;
+}
 

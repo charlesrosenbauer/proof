@@ -303,12 +303,6 @@ int checkKeyword(FrontendFile file, int node, char* keyword, int len){
 
 
 
-int parseDef(FrontendFile file, int defid){
-	
-
-	// Nothing worked
-	return -1;
-}
 
 
 

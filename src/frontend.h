@@ -149,6 +149,7 @@ typedef struct{
 
 int		parseNode		(FrontendFile);
 void	printNodeTable	(NodeTable*);
+void	printRanges		(NodeTable*);
 
 int		parseDef		(FrontendFile, int);
 
