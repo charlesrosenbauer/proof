@@ -1,0 +1,14 @@
+
+;; example : (\2 4) =  a/b  = 4b/a
+;; approx  : (\2 2) = 17/12 = 24/17
+{lemma ratio-root-eqv
+	(= (/ a b) (\2 n)) -> (= (/ (* n b) a) (\2 n)) :
+	
+	;; r := (\2 n)
+	;; transit : (= (/ a b) (/ (* n b) a))
+	;; algebra : (= (/ a b) r) => (= (/ (* r a) b) n)
+	;; algebra : (= (\ (* b n) (* b r)) r)
+	;; 
+	;;
+	;; agh, figure this out later
+}
