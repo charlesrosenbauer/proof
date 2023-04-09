@@ -5,6 +5,187 @@
 #include "util.h"
 
 
+
+
+
+Bloom	makeBloom(int size){
+	Bloom ret;
+	size		= alignExp2(size);
+	size		= (size < 64)? 64 : size;
+	ret.table	= malloc(sizeof(uint64_t) * size / 64);
+	ret.size	= size;
+	for(int i   = 0; i < size / 64; i++) ret.table[i] = 0;
+	return ret;
+}
+
+
+int		checkBloom(Bloom b, uint64_t n){
+	uint64_t w = hashU64( n );
+	uint64_t x = hashU64((n >> 17) | (n << (64-17)));
+	uint64_t y = hashU64((n >> 23) | (n << (64-23)));
+	uint64_t z = hashU64((n >> 51) | (n << (64-51)));
+	
+	w &= b.size-1;
+	x &= b.size-1;
+	y &= b.size-1;
+	z &= b.size-1;
+	
+	return (b.table[w / 64] & (1l << (w % 64)))
+		&& (b.table[x / 64] & (1l << (x % 64)))
+		&& (b.table[y / 64] & (1l << (y % 64)))
+		&& (b.table[z / 64] & (1l << (z % 64)));
+}
+
+void	insertBloom(Bloom b, uint64_t n){
+	uint64_t w = hashU64( n );
+	uint64_t x = hashU64((n >> 17) | (n << (64-17)));
+	uint64_t y = hashU64((n >> 23) | (n << (64-23)));
+	uint64_t z = hashU64((n >> 51) | (n << (64-51)));
+	
+	w &= b.size-1;
+	x &= b.size-1;
+	y &= b.size-1;
+	z &= b.size-1;
+	
+	b.table[w / 64] |= (1l << (w % 64));
+	b.table[x / 64] |= (1l << (x % 64));
+	b.table[y / 64] |= (1l << (y % 64));
+	b.table[z / 64] |= (1l << (z % 64));
+}
+
+int 	bloomFill(Bloom b){
+	int   ret = 0;
+	for(int i = 0; i < b.size/64; i++) ret += __builtin_popcountl(b.table[i]);
+	return ret;
+}
+
+
+
+
+BitList	makeBitList	(int size){
+	BitList ret;
+	ret.size   =  size;
+	ret.length = (size / 64) + ((size % 64) != 0);
+	ret.bits   = malloc(sizeof(uint64_t) * ret.length);
+	for(int i  = 0; i < ret.length; i++) ret.bits[i] = 0;
+	return ret;
+}
+
+int	checkBitList(BitList* b, int ix){
+	if((ix < 0) || (ix >= b->size)) return 0;
+	return (b->bits[ix/64] & (1l << (ix % 64))) != 0;
+}
+
+void insertBitList(BitList* b, int ix){
+	if((ix < 0) || (ix >= b->size)) return;
+	b->bits[ix/64] |=  (1l << (ix % 64));
+}
+
+void removeBitList(BitList* b, int ix){
+	if((ix < 0) || (ix >= b->size)) return;
+	b->bits[ix/64] &= ~(1l << (ix % 64));
+}
+
+
+
+
+
+TripList makeTripList(int size){
+	TripList ret;
+	ret.xs  = malloc(sizeof(Trip) * size);
+	ret.len = 0;
+	ret.cap = size;
+	return ret;
+}
+
+int growTripList(TripList* lst, int size){
+	if(lst->cap < size){
+		Trip* xs  = lst->xs;
+		lst->xs   = malloc(sizeof(Trip) * size);
+		for(int i = 0; i < lst->len; i++) lst->xs[i] = xs[i];
+		lst->cap  = size;
+		free(xs);
+	}
+	return lst->cap;
+}
+
+int appendTripList(TripList* lst, Trip x){
+	if(lst->len+5 >= lst->cap) growTripList(lst, lst->cap * 2);
+	lst->xs[lst->len] = x;
+	lst->len++;
+	return lst->len-1;
+}
+
+
+
+PairList makePairList(int size){
+	PairList ret;
+	ret.xs  = malloc(sizeof(Pair) * size);
+	ret.len = 0;
+	ret.cap = size;
+	return ret;
+}
+
+int growPairList(PairList* lst, int size){
+	if(lst->cap < size){
+		Pair* xs  = lst->xs;
+		lst->xs   = malloc(sizeof(Pair) * size);
+		for(int i = 0; i < lst->len; i++) lst->xs[i] = xs[i];
+		lst->cap  = size;
+		free(xs);
+	}
+	return lst->cap;
+}
+
+int appendPairList(PairList* lst, Pair x){
+	if(lst->len+5 >= lst->cap) growPairList(lst, lst->cap * 2);
+	lst->xs[lst->len] = x;
+	lst->len++;
+	return lst->len-1;
+}
+
+
+void swapPair(Pair* a, Pair* b){
+	Pair t = *a;
+	*a     = *b;
+	*b     = t;
+}
+
+void sortPairSubList(PairList* lst, int lo, int hi){
+	if(lo < hi){
+		int pivot = lst->xs[hi].a;
+		int index = lo-1;
+	
+		for(int i = lo; i < hi; i++){
+			if(lst->xs[i].a <= pivot){
+				index++;
+				swapPair(&lst->xs[index], &lst->xs[i]);
+			}
+		}
+		swapPair(&lst->xs[index+1], &lst->xs[hi]);
+		
+		
+		int p = index+1;
+		
+		sortPairSubList(lst, lo, p-1);
+		sortPairSubList(lst, p+1, hi);
+	}
+}
+
+void sortPairList(PairList* lst){
+	sortPairSubList(lst, 0, lst->len-1);
+}
+
+void printPairList(PairList lst){
+	printf("====%i/%i====\n", lst.len, lst.cap);
+	for(int i = 0; i < lst.len; i++)
+		printf("%i %i\n", lst.xs[i].a, lst.xs[i].b);
+	printf("\n");
+}
+
+
+
+
 IntList makeIntList(int size){
 	IntList ret;
 	ret.xs  = malloc(sizeof(int) * size);

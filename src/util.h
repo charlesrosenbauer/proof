@@ -5,6 +5,63 @@
 #include "stdint.h"
 
 
+
+typedef struct{
+	uint64_t*	table;
+	int			size;
+}Bloom;
+
+Bloom	makeBloom	(int);
+int		checkBloom	(Bloom, uint64_t);
+void	insertBloom	(Bloom, uint64_t);
+int 	bloomFill	(Bloom);
+
+
+
+
+typedef struct{
+	uint64_t*	bits;
+	int			size, length;
+}BitList;
+
+BitList	makeBitList		(int);
+int		checkBitList	(BitList*, int);
+void	insertBitList	(BitList*, int);
+void	removeBitList	(BitList*, int);
+
+
+
+typedef struct{
+	int a, b, c;
+}Trip;
+
+typedef struct{
+	Trip*	xs;
+	int		len, cap;
+}TripList;
+
+TripList makeTripList  (int);
+int      growTripList  (TripList*, int);
+int      appendTripList(TripList*, Trip);
+
+
+
+typedef struct{
+	int a, b;
+}Pair;
+
+typedef struct{
+	Pair*	xs;
+	int		len, cap;
+}PairList;
+
+PairList	makePairList	(int);
+int			growPairList	(PairList*, int);
+int			appendPairList	(PairList*, Pair);
+void		sortPairList	(PairList*);
+void		printPairList	(PairList);
+
+
 typedef struct{
 	int*	xs;
 	int		len, cap;
