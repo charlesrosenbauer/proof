@@ -1,15 +1,28 @@
 ;; logic
-(forall a b   (= (& a b) (& b a)))
-(forall a b   (= (| a b) (| b a)))
-(forall a b   (= a (& a (| b (! b)))))
-(forall a b   (= a (| a (| b (! b)))))
-(forall a b c (= (& a (| b c)) (| (& a b) (& a c))))
-(forall a b c (= (| a (& b c)) (& (| a b) (| a c))))
+{operator (Set x) : (& x x) (x) }
+{operator (Set x) : (| x x) (x) }
+{operator (Set x) : (! x)   (x) }
+{commute-and	: (forall a b	(= (& a b) (& b a)))}
+{commute-or		: (forall a b   (= (| a b) (| b a)))}
+{certain-and	: (forall a b   (= a (& a (| b (! b)))))}
+{certain-or		: (forall a b   (= a (| a (| b (! b)))))}
+{distrib-and	: (forall a b c (= (& a (| b c)) (| (& a b) (& a c))))}
+{distrib-or		: (forall a b c (= (| a (& b c)) (& (| a b) (| a c))))}
 
-(forall a b   (= (| a b) (| b a)))
-(forall a b c (= (| a (| b c)) (| (| a b) c)))
-(forall a b   (= a (! (! (| a b)) (! (! (| a (! b)))))))
+;; redundant logic axioms
+{assoc-and		: (forall a b c (= (& a (& b c)) (& (& a b) c)))}
+{assoc-or		: (forall a b c (= (| a (| b c)) (| (| a b) c)))}
+{demorgan-eq-a	: (forall a b   (= a (! (! (| a b)) (! (! (| a (! b)))))))}
+{demorgan-eq-b	: (forall a b   (= a (! (| (! (| a b)) (! (| a (! b)))))))}
 
-(forall a b   (= a (! (| (! (| a b)) (! (| a (! b)))))))
+
+
+;; group theory
+{operator (Group g) : (* g g) (g) }
+{operator (Group g) : (* g)   (g) }
+{constant (Group g) : e }
+{assoc			: (forall a b c	(= (* a (* b c)) (* (* a b) c)))}
+{id				: (forall a		(= (* a e) a))
+{inv			: (forall a		(= (* a (- a) e))
 
 
