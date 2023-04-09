@@ -1,0 +1,15 @@
+;; logic
+(forall a b   (= (& a b) (& b a)))
+(forall a b   (= (| a b) (| b a)))
+(forall a b   (= a (& a (| b (! b)))))
+(forall a b   (= a (| a (| b (! b)))))
+(forall a b c (= (& a (| b c)) (| (& a b) (& a c))))
+(forall a b c (= (| a (& b c)) (& (| a b) (| a c))))
+
+(forall a b   (= (| a b) (| b a)))
+(forall a b c (= (| a (| b c)) (| (| a b) c)))
+(forall a b   (= a (! (! (| a b)) (! (! (| a (! b)))))))
+
+(forall a b   (= a (! (| (! (| a b)) (! (| a (! b)))))))
+
+
