@@ -25,14 +25,14 @@ typedef struct{
 }Operator;
 
 typedef struct{
-	uint32_t	find, replace;
+	uint64_t	a, b;
 }Axiom;
 
 
 
 
 typedef struct{
-	uint32_t*	graph;
+	uint64_t*	graph;
 	Point*		points;
 	
 	Axiom*		axioms;
@@ -43,6 +43,12 @@ typedef struct{
 	int			afill, asize;
 	int			ofill, osize;
 }Proof;
+
+
+Proof		initProof	(int, int, int, int);
+int			addAxiom	(Proof*, Axiom);
+int			addOperator	(Proof*, Operator);
+int			isMatch		(Proof*, uint64_t, uint64_t);
 
 
 
