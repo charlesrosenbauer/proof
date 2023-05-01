@@ -8,22 +8,40 @@
 
 
 typedef struct{
-	uint32_t	kind;
-	int32_t	a, b;
-}Binop;
+	uint64_t	index;
+	uint32_t	size;
+	uint32_t	op;
+}Point;
+
+typedef enum{
+	OF_VOID		= 0x00,
+	OF_COMM		= 0x01,
+	OF_ASOC		= 0x02
+}OpFlags;
 
 typedef struct{
-	uint32_t	kind;
-	int32_t	size;
-	int32_t*	vals;
-}Function;
+	int			parct;
+	OpFlags		flags;
+}Operator;
 
 typedef struct{
-	Binop*		bops;	// positive values
-	Function*	fncs;	// negative values
+	uint32_t	find, replace;
+}Axiom;
+
+
+
+
+typedef struct{
+	uint32_t*	graph;
+	Point*		points;
 	
-	int			bct, bfill;
-	int			fct, ffill;
+	Axiom*		axioms;
+	Operator*	ops;
+	
+	int			gfill, gsize;
+	int			pfill, psize;
+	int			afill, asize;
+	int			ofill, osize;
 }Proof;
 
 
