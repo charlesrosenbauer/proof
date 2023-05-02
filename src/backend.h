@@ -8,9 +8,17 @@
 
 
 typedef struct{
-	uint64_t	index;
-	uint32_t	size;
-	uint32_t	op;
+	int64_t	index;	// opr if positive, sym if negative
+	union{
+		struct{
+			int32_t size;
+			int32_t op;
+		} opr;
+		
+		struct{
+			int64_t sym;
+		} sym;
+	};
 }Point;
 
 typedef enum{
